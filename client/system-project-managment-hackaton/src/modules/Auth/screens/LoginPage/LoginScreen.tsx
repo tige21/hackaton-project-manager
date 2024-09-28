@@ -17,8 +17,7 @@ const LoginScreen = () => {
         <div className={styles.container}>
           <div className={styles.welcomeSection}>
             <h2 className={styles.welcomeText}>Добро пожаловать в</h2>
-            <Logo />
-            <h1 className={styles.title}>НАЗВАНИЕ</h1>
+            <Logo size={300} />
           </div>
           <LoginForm />
         </div>
