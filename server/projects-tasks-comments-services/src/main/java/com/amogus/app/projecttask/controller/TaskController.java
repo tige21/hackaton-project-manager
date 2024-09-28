@@ -3,11 +3,13 @@ package com.amogus.app.projecttask.controller;
 import com.amogus.app.projecttask.api.TaskApi;
 import com.amogus.app.projecttask.dto.PaginatedTasksDto;
 import com.amogus.app.projecttask.dto.TaskDto;
+import com.amogus.app.projecttask.dto.TaskStatusResponseDto;
 import com.amogus.app.projecttask.entity.Task;
 import com.amogus.app.projecttask.service.TaskService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -38,6 +40,13 @@ public class TaskController implements TaskApi {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @Override
+    public ResponseEntity<TaskStatusResponseDto> getTasksByStatus(@PathVariable Long projectId) {
+        TaskStatusResponseDto taskStatusResponse = taskService.getTasksGroupedByStatus(projectId);
+        return ResponseEntity.ok(taskStatusResponse);
+    }
+
 
     @Override
     public ResponseEntity<TaskDto> updateTask(Long id, TaskDto taskDto) {

@@ -82,6 +82,9 @@ func (u *User) GetUserByID(ctx context.Context, id string) (entity.User, error) 
 	var user entity.User
 	err := u.client.QueryRow(ctx, q, id).Scan(&user.ID, &user.Name, &user.Surname, &user.Email, &user.Password, &user.Roles, &user.CreatedDate, &user.UpdatedDate)
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return entity.User{}, apperror.ErrUserNotFound
+		}
 		return entity.User{}, err
 	}
 

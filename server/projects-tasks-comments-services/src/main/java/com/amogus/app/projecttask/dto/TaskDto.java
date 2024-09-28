@@ -40,7 +40,7 @@ public class TaskDto {
     @Schema(description = "Тип задачи", example = "TASK", allowableValues = {"EPIC", "BUG", "TASK", "HISTORY", "SUBTASK"})
     private TaskType type;
 
-    @Schema(description = "Статус задачи", example = "IN_PROGRESS", allowableValues = {"OPEN", "IN_PROGRESS", "REVIEW", "TESTING", "DONE"})
+    @Schema(description = "Статус задачи", example = "IN_PROGRESS", allowableValues = {"OPEN", "IN_PROGRESS", "REVIEW", "TESTING", "READY"})
     private TaskStatus status;
 
     @Schema(description = "Приоритет задачи", example = "HIGH", allowableValues = {"LOW", "MEDIUM", "HIGH", "CRITICAL"})
