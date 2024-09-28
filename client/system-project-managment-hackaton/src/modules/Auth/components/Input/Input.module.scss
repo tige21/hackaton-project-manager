@@ -1,0 +1,36 @@
+.inputContainer {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    margin-bottom: 1.5rem;
+  }
+  
+  .label {
+    font-size: 1rem;
+    color: #b0b0b0;
+    margin-bottom: 0.5rem;
+  }
+  
+  .input {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    color: #b0b0b0;
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 15px;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  
+  .input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+  
+  .input:focus {
+    border-color: #aad3ff; /* Light blue color when focused */
+  }
+  
+  .input:hover {
+    border-color: #aad3ff; /* Light blue color on hover */
+  }
+  

@@ -1,0 +1,32 @@
+### Sign-up
+
+POST http://localhost:8080/public/v1/auth/sign-up
+Content-Type: application/json
+
+{
+  "name": "German",
+  "surname": "Bogatov",
+  "email": "bogatovv@mail.ru",
+  "password": "23Bogatov"
+}
+
+### Sign-in
+
+POST http://localhost:8080/public/v1/auth/sign-in
+Content-Type: application/json
+
+{
+  "email": "bogatovd@mail.ru",
+  "password": "23Bogatov"
+}
+
+### Refresh
+POST http://localhost:8080/public/v1/auth/refresh/9ca28c36-7001-469e-8ebf-f7fe5f99c3d4
+Content-Type: application/json
+
+
+### Get User By ID
+POST http://localhost:8080/public/v1/users/890e0761-d600-41d7-88a7-fb48143f716d
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTcyNzUzNTQ1NCwianRpIjoiODZlZjUxZGQtNDQxOC00MDc5LTgwNTYtNmZkOWEzOTE0ZmU5IiwiZW1haWwiOiJib2dhdG92dkBtYWlsLnJ1In0.9rbJeUWTIZfZUCCOTWRBYHr_KAPsCEHIaSX10YcrDwM
+

@@ -1,0 +1,36 @@
+.form {
+  border-radius: 15px;
+  color: white;
+}
+
+.title {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.signInText {
+  margin-bottom: 2rem;
+  color: #b0b0b0;
+}
+
+.loginLink {
+  color: #aad3ff;
+  text-decoration: none;
+}
+
+.loginLink:hover {
+  text-decoration: underline;
+}
+
+.inputRow {
+  display: flex;
+  gap: 1rem;
+}
+
+input {
+  color: white;
+}
+
+button {
+  margin-top: 2rem;
+}

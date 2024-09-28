@@ -1,0 +1,47 @@
+.loginScreen {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem;
+    max-width: 80rem;
+    width: 50rem;
+    max-height: 40rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 40px;
+    border-width: 1px;
+    border-color: black;
+    flex-direction: row;
+    color: #fff;
+
+  }
+  
+  .container {
+    display: flex;
+ 
+    justify-content: space-between;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+    border-width: 2px;
+    border-color: teal;
+
+  }
+
+  .welcomeSection {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+  .welcomeText {
+    font-size: 1.5rem;
+    margin-top: 2rem;
+  }
+  
+  .title {
+    font-size: 3rem;
+    color: #aad3ff;
+  }
+  

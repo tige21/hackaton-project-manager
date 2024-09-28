@@ -1,0 +1,25 @@
+.projectsPageContainer {
+    display: flex;
+    height: 100%;
+  }
+  
+  .projectsContent {
+    flex: 1;
+    padding: 20px;
+   
+    color: white;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .projectGrid {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  
