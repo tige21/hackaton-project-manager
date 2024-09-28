@@ -31,7 +31,7 @@ ENV SPRING_DATASOURCE_PASSWORD=amogus
 ENV SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
 
 # Открытие порта приложения
-EXPOSE 8080
+EXPOSE 8081
 
 # Запуск приложения
 ENTRYPOINT ["java","-jar","app.jar"]
