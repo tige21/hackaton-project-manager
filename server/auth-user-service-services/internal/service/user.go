@@ -11,9 +11,10 @@ var _ IUser = &User{}
 type IUser interface {
 	CreateUser(ctx context.Context, user entity.User) error
 	GetUserByID(ctx context.Context, id string) (entity.User, error)
+	GetUsers(ctx context.Context, filter entity.Filter) ([]entity.User, error)
 	GetUserByEmailAndPassword(ctx context.Context, email, password string) (entity.User, error)
 	DeleteUserByID(ctx context.Context, id string) error
-	UpdateUserID(ctx context.Context, userUpdate entity.UserUpdate) (entity.User, error)
+	UpdateUserByID(ctx context.Context, userUpdate entity.UserUpdate) (entity.User, error)
 }
 
 type User struct {
@@ -61,6 +62,12 @@ func (u *User) GetUserByEmailAndPassword(ctx context.Context, email, password st
 	return user, nil
 }
 
-func (u *User) UpdateUserID(ctx context.Context, userUpdate entity.UserUpdate) (entity.User, error) {
-	return u.userRepo.UpdateUserID(ctx, userUpdate)
+// UpdateUserByID - обновление пользователя
+func (u *User) UpdateUserByID(ctx context.Context, userUpdate entity.UserUpdate) (entity.User, error) {
+	return u.userRepo.UpdateUserByID(ctx, userUpdate)
+}
+
+// GetUsers - получение списка пользователей
+func (u *User) GetUsers(ctx context.Context, filter entity.Filter) ([]entity.User, error) {
+	return u.userRepo.GetUsers(ctx, filter)
 }

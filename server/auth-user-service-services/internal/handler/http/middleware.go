@@ -2,7 +2,6 @@ package http
 
 import (
 	"context"
-	"fmt"
 	"github.com/GermanBogatov/user-service/internal/common/apperror"
 	"github.com/GermanBogatov/user-service/internal/common/metrics"
 	"github.com/GermanBogatov/user-service/internal/common/response"
@@ -17,6 +16,7 @@ import (
 
 type appHandler func(http.ResponseWriter, *http.Request) error
 
+// appMiddleware - мидлваре для приложения
 func appMiddleware(h appHandler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		method := r.Method
@@ -59,8 +59,6 @@ func appMiddleware(h appHandler) http.HandlerFunc {
 
 			setCtxValue(r, config.ParamID, claims.Id)
 			setCtxValue(r, config.ParamRole, claims.Role)
-			//todo прокинуть ID
-			fmt.Println(claims.Id)
 		}
 
 		err := h(w, r)
@@ -74,6 +72,7 @@ func appMiddleware(h appHandler) http.HandlerFunc {
 	}
 }
 
+// setCtxValue - прокинуть значение в контексте
 func setCtxValue(r *http.Request, key, value any) {
 	ctx := r.Context()
 	req := r.WithContext(context.WithValue(ctx, key, value))

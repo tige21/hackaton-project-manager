@@ -21,7 +21,8 @@ type IUser interface {
 	GetUserByID(ctx context.Context, id string) (entity.User, error)
 	GetUserByEmailAndPassword(ctx context.Context, email, password string) (entity.User, error)
 	DeleteUserByID(ctx context.Context, id string) error
-	UpdateUserID(ctx context.Context, userUpdate entity.UserUpdate) (entity.User, error)
+	UpdateUserByID(ctx context.Context, userUpdate entity.UserUpdate) (entity.User, error)
+	GetUsers(ctx context.Context, filter entity.Filter) ([]entity.User, error)
 }
 
 type User struct {
@@ -109,11 +110,9 @@ func (u *User) DeleteUserByID(ctx context.Context, id string) error {
 	return nil
 }
 
-// UpdateUserID - редактирование пользователя
-func (u *User) UpdateUserID(ctx context.Context, userUpdate entity.UserUpdate) (entity.User, error) {
+// UpdateUserByID - редактирование пользователя
+func (u *User) UpdateUserByID(ctx context.Context, userUpdate entity.UserUpdate) (entity.User, error) {
 	query, args := prepareQueryUpdate(userUpdate)
-	fmt.Println("query=", query)
-	fmt.Println("args=", args)
 	var user entity.User
 	err := u.client.QueryRow(ctx, query, args...).Scan(&user.ID, &user.Name, &user.Surname, &user.Email, &user.Password, &user.Role, &user.CreatedDate, &user.UpdatedDate)
 	if err != nil {
@@ -155,4 +154,31 @@ func prepareQueryUpdate(user entity.UserUpdate) (string, []interface{}) {
 
 	query := fmt.Sprintf("UPDATE %s SET %s WHERE id=$%v RETURNING id,name,surname,email,password,role,created_date,updated_date;", "users", setQuery, argId)
 	return query, args
+}
+
+// GetUsers - получение пользователей
+func (u *User) GetUsers(ctx context.Context, filter entity.Filter) ([]entity.User, error) {
+	q := fmt.Sprintf(`
+			SELECT id,name,surname,email,password,role,created_date,updated_date
+			FROM users
+			ORDER BY %s %s
+			OFFSET %v LIMIT %v;`, filter.Order, filter.Sort, filter.Offset, filter.Limit)
+
+	rows, err := u.client.Query(ctx, q)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+	users := make([]entity.User, 0, filter.Limit)
+	for rows.Next() {
+		var user entity.User
+		errScan := rows.Scan(&user.ID, &user.Name, &user.Surname, &user.Email, &user.Password, &user.Role, &user.CreatedDate, &user.UpdatedDate)
+		if errScan != nil {
+			return nil, err
+		}
+		users = append(users, user)
+	}
+
+	return users, nil
 }

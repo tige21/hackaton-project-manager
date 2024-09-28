@@ -13,6 +13,18 @@ const (
 	JWTSecret     = "$3cr3t"
 	IsoTimeLayout = "2006-01-02T15:04:05Z" // Формат ISO 8601
 
-	ParamID   = "id"
-	ParamRole = "role"
+	ParamID     = "id"
+	ParamRole   = "role"
+	ParamOffset = "offset"
+	ParamLimit  = "limit"
+	ParamSort   = "sort"
+	ParamOrder  = "order"
+
+	OrderName          = "name"
+	OrderSurname       = "surname"
+	OrderEmail         = "email"
+	OrderCreatedDate   = "createdDate"
+	OrderCreatedDateDB = "created_date"
+	SortDesc           = "desc"
+	SortAsc            = "asc"
 )

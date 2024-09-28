@@ -12,6 +12,7 @@ const (
 	RoleAdmin     RoleType = "admin"
 )
 
+// User - модель пользователя
 type User struct {
 	ID          string
 	Name        string
@@ -24,11 +25,20 @@ type User struct {
 	JWT         JWT
 }
 
+// UserUpdate - модель обновления пользователя
 type UserUpdate struct {
 	ID      string
 	Name    *string
 	Surname *string
 	Email   *string
+}
+
+// Filter - модель фильтра
+type Filter struct {
+	Limit  int
+	Offset int
+	Sort   string
+	Order  string
 }
 
 func (u *User) GenerateID() {
@@ -58,6 +68,7 @@ func (u *User) SetJWT(token, refreshToken string) {
 	}
 }
 
+// JWT - модель токена с рефрешом
 type JWT struct {
 	Token        string
 	RefreshToken string

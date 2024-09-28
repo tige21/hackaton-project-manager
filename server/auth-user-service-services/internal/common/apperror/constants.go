@@ -15,7 +15,10 @@ var (
 	ErrInvalidEmailFormat   = errors.New("invalid email format")
 	ErrEmptyPassword        = errors.New("field 'password' is empty")
 	ErrAllFieldAreEmpty     = errors.New("all fields are empty")
-	ErrRedisNil             = errors.New("не найдена запись в редисе")
+	ErrInvalidSort          = errors.New("invalid param 'sort'")
+	ErrInvalidOrder         = errors.New("invalid param 'order'")
+
+	ErrRedisNil = errors.New("не найдена запись в редисе")
 )
 
 const (

@@ -2,10 +2,12 @@ package validator
 
 import (
 	"github.com/GermanBogatov/user-service/internal/common/apperror"
+	"github.com/GermanBogatov/user-service/internal/config"
 	"github.com/GermanBogatov/user-service/internal/handler/http/model"
 	"strings"
 )
 
+// ValidateSignUpUser - валидация пользователя при регистрации
 func ValidateSignUpUser(user model.SignUpRequest) error {
 	if strings.TrimSpace(user.Name) == "" {
 		return apperror.ErrEmptyName
@@ -27,6 +29,7 @@ func ValidateSignUpUser(user model.SignUpRequest) error {
 	return nil
 }
 
+// ValidateUserUpdate - валидация пользователя при редактировании
 func ValidateUserUpdate(user model.UserUpdate) error {
 	if user.Name == nil && user.Surname == nil && user.Email == nil {
 		return apperror.ErrAllFieldAreEmpty
@@ -51,6 +54,7 @@ func ValidateUserUpdate(user model.UserUpdate) error {
 	return nil
 }
 
+// ValidateSignInUser - валидация пользователя при авторизации
 func ValidateSignInUser(user model.SignInRequest) error {
 	if strings.TrimSpace(user.Email) == "" {
 		return apperror.ErrEmptyEmail
@@ -64,4 +68,24 @@ func ValidateSignInUser(user model.SignInRequest) error {
 	}
 
 	return nil
+}
+
+// ValidateSort - валидация типа сортировки
+func ValidateSort(sort string) error {
+	switch sort {
+	case config.SortAsc, config.SortDesc:
+		return nil
+	default:
+		return apperror.ErrInvalidSort
+	}
+}
+
+// ValidateOrder - валидация поля сортировки
+func ValidateOrder(order string) error {
+	switch order {
+	case config.OrderEmail, config.OrderName, config.OrderSurname, config.OrderCreatedDate:
+		return nil
+	default:
+		return apperror.ErrInvalidOrder
+	}
 }
