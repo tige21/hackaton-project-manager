@@ -23,6 +23,24 @@ func MapToEntityUserUpdate(user model.UserUpdate) entity.UserUpdate {
 	}
 }
 
+func MapToEntityFilter(limit, offset int, sort, order string) entity.Filter {
+	return entity.Filter{
+		Limit:  limit,
+		Offset: offset,
+		Sort:   sort,
+		Order:  mapOrderType(order),
+	}
+}
+
+func mapOrderType(order string) string {
+	switch order {
+	case config.OrderCreatedDate:
+		return config.OrderCreatedDateDB
+	default:
+		return order
+	}
+}
+
 func MapToUserWithJWTResponse(code int, user entity.User) response.ViewResponse {
 	var (
 		updatedDate *string
@@ -49,7 +67,7 @@ func MapToUserWithJWTResponse(code int, user entity.User) response.ViewResponse 
 	}
 }
 
-func MapToUserResponse(code int, user entity.User) response.ViewResponse {
+func mapUserToResponse(user entity.User) model.UserResponse {
 	var (
 		updatedDate *string
 	)
@@ -59,19 +77,33 @@ func MapToUserResponse(code int, user entity.User) response.ViewResponse {
 		updatedDate = &updateTime
 	}
 
-	return response.ViewResponse{
-		Code: code,
-		Result: model.UserResponse{
-			ID:          user.ID,
-			Name:        user.Name,
-			Surname:     user.Surname,
-			Email:       user.Email,
-			CreatedDate: user.CreatedDate.Format(config.IsoTimeLayout),
-			UpdatedDate: updatedDate,
-		},
+	return model.UserResponse{
+		ID:          user.ID,
+		Name:        user.Name,
+		Surname:     user.Surname,
+		Email:       user.Email,
+		CreatedDate: user.CreatedDate.Format(config.IsoTimeLayout),
+		UpdatedDate: updatedDate,
 	}
 }
 
+func MapToUserResponse(code int, user entity.User) response.ViewResponse {
+	return response.ViewResponse{
+		Code:   code,
+		Result: mapUserToResponse(user),
+	}
+}
+
+func MapToUsersResponse(code int, users []entity.User) response.ViewResponse {
+	result := make([]model.UserResponse, 0, len(users))
+	for _, user := range users {
+		result = append(result, mapUserToResponse(user))
+	}
+	return response.ViewResponse{
+		Code:   code,
+		Result: result,
+	}
+}
 func MapToJWTResponse(code int, token, refreshToken string) response.ViewResponse {
 	return response.ViewResponse{
 		Code: code,

@@ -15,6 +15,37 @@ import (
 	"net/http"
 )
 
+// GetUsers - хэндлер получения пользователей
+func (h *Handler) GetUsers(w http.ResponseWriter, r *http.Request) error {
+	ctx := r.Context()
+
+	offset, limit, err := helpers.GetLimitAndOffset(r, config.ParamOffset, config.ParamLimit)
+	if err != nil {
+		return apperror.BadRequestError(err)
+	}
+
+	sort := helpers.GetStringWithDefaultFromQuery(r, config.ParamSort, config.SortDesc)
+	order := helpers.GetStringWithDefaultFromQuery(r, config.ParamOrder, config.OrderCreatedDate)
+
+	err = validator.ValidateSort(sort)
+	if err != nil {
+		return apperror.BadRequestError(err)
+	}
+
+	err = validator.ValidateOrder(order)
+	if err != nil {
+		return apperror.BadRequestError(err)
+	}
+
+	filter := mapper.MapToEntityFilter(limit, offset, sort, order)
+	users, err := h.userService.GetUsers(ctx, filter)
+	if err != nil {
+		return apperror.InternalServerError(err)
+	}
+
+	return response.RespondSuccess(w, mapper.MapToUsersResponse(http.StatusOK, users))
+}
+
 // GetUserByID - хэндлер получения пользователя по идентификатору
 func (h *Handler) GetUserByID(w http.ResponseWriter, r *http.Request) error {
 	ctx := r.Context()

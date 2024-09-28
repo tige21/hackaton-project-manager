@@ -2,6 +2,7 @@ package validator
 
 import (
 	"github.com/GermanBogatov/user-service/internal/common/apperror"
+	"github.com/GermanBogatov/user-service/internal/config"
 	"github.com/GermanBogatov/user-service/internal/handler/http/model"
 	"strings"
 )
@@ -64,4 +65,22 @@ func ValidateSignInUser(user model.SignInRequest) error {
 	}
 
 	return nil
+}
+
+func ValidateSort(sort string) error {
+	switch sort {
+	case config.SortAsc, config.SortDesc:
+		return nil
+	default:
+		return apperror.ErrInvalidSort
+	}
+}
+
+func ValidateOrder(order string) error {
+	switch order {
+	case config.OrderEmail, config.OrderName, config.OrderSurname, config.OrderCreatedDate:
+		return nil
+	default:
+		return apperror.ErrInvalidOrder
+	}
 }

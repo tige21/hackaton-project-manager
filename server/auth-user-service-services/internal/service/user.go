@@ -11,6 +11,7 @@ var _ IUser = &User{}
 type IUser interface {
 	CreateUser(ctx context.Context, user entity.User) error
 	GetUserByID(ctx context.Context, id string) (entity.User, error)
+	GetUsers(ctx context.Context, filter entity.Filter) ([]entity.User, error)
 	GetUserByEmailAndPassword(ctx context.Context, email, password string) (entity.User, error)
 	DeleteUserByID(ctx context.Context, id string) error
 	UpdateUserID(ctx context.Context, userUpdate entity.UserUpdate) (entity.User, error)
@@ -63,4 +64,8 @@ func (u *User) GetUserByEmailAndPassword(ctx context.Context, email, password st
 
 func (u *User) UpdateUserID(ctx context.Context, userUpdate entity.UserUpdate) (entity.User, error) {
 	return u.userRepo.UpdateUserID(ctx, userUpdate)
+}
+
+func (u *User) GetUsers(ctx context.Context, filter entity.Filter) ([]entity.User, error) {
+	return u.userRepo.GetUsers(ctx, filter)
 }

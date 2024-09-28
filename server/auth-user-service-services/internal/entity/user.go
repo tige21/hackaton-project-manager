@@ -31,6 +31,13 @@ type UserUpdate struct {
 	Email   *string
 }
 
+type Filter struct {
+	Limit  int
+	Offset int
+	Sort   string
+	Order  string
+}
+
 func (u *User) GenerateID() {
 	u.ID = uuid.New().String()
 }
