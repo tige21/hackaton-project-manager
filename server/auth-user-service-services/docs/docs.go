@@ -461,7 +461,7 @@ const docTemplate = `
           }
         }
       },
-      "put": {
+      "patch": {
         "security": [
           {
             "bearerAuth": []

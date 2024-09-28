@@ -13,6 +13,7 @@ type IUser interface {
 	GetUserByID(ctx context.Context, id string) (entity.User, error)
 	GetUserByEmailAndPassword(ctx context.Context, email, password string) (entity.User, error)
 	DeleteUserByID(ctx context.Context, id string) error
+	UpdateUserID(ctx context.Context, userUpdate entity.UserUpdate) (entity.User, error)
 }
 
 type User struct {
@@ -58,4 +59,8 @@ func (u *User) GetUserByEmailAndPassword(ctx context.Context, email, password st
 	}
 
 	return user, nil
+}
+
+func (u *User) UpdateUserID(ctx context.Context, userUpdate entity.UserUpdate) (entity.User, error) {
+	return u.userRepo.UpdateUserID(ctx, userUpdate)
 }

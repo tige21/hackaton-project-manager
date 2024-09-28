@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"context"
+	"fmt"
 	"github.com/GermanBogatov/user-service/internal/common/apperror"
 	"github.com/GermanBogatov/user-service/internal/entity"
 	"github.com/GermanBogatov/user-service/pkg/postgresql"
@@ -9,6 +10,8 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/pkg/errors"
+	"strings"
+	"time"
 )
 
 var _ IUser = &User{}
@@ -18,6 +21,7 @@ type IUser interface {
 	GetUserByID(ctx context.Context, id string) (entity.User, error)
 	GetUserByEmailAndPassword(ctx context.Context, email, password string) (entity.User, error)
 	DeleteUserByID(ctx context.Context, id string) error
+	UpdateUserID(ctx context.Context, userUpdate entity.UserUpdate) (entity.User, error)
 }
 
 type User struct {
@@ -103,4 +107,52 @@ func (u *User) DeleteUserByID(ctx context.Context, id string) error {
 	}
 
 	return nil
+}
+
+// UpdateUserID - редактирование пользователя
+func (u *User) UpdateUserID(ctx context.Context, userUpdate entity.UserUpdate) (entity.User, error) {
+	query, args := prepareQueryUpdate(userUpdate)
+	fmt.Println("query=", query)
+	fmt.Println("args=", args)
+	var user entity.User
+	err := u.client.QueryRow(ctx, query, args...).Scan(&user.ID, &user.Name, &user.Surname, &user.Email, &user.Password, &user.Role, &user.CreatedDate, &user.UpdatedDate)
+	if err != nil {
+		return entity.User{}, err
+	}
+
+	return user, nil
+}
+
+// prepareQueryUpdate - подготовка запроса для обновления пользователя
+func prepareQueryUpdate(user entity.UserUpdate) (string, []interface{}) {
+	setValues := make([]string, 0)
+	args := make([]interface{}, 0)
+	argId := 1
+	if user.Name != nil {
+		setValues = append(setValues, fmt.Sprintf("name=$%d", argId))
+		args = append(args, *user.Name)
+		argId++
+	}
+
+	if user.Surname != nil {
+		setValues = append(setValues, fmt.Sprintf("surname=$%d", argId))
+		args = append(args, *user.Surname)
+		argId++
+	}
+
+	if user.Email != nil {
+		setValues = append(setValues, fmt.Sprintf("email=$%d", argId))
+		args = append(args, *user.Email)
+		argId++
+	}
+
+	setValues = append(setValues, fmt.Sprintf("updated_date=$%d", argId))
+	args = append(args, time.Now().UTC())
+	argId++
+
+	setQuery := strings.Join(setValues, ", ")
+	args = append(args, user.ID)
+
+	query := fmt.Sprintf("UPDATE %s SET %s WHERE id=$%v RETURNING id,name,surname,email,password,role,created_date,updated_date;", "users", setQuery, argId)
+	return query, args
 }
