@@ -16,4 +16,10 @@
                  relativeToChangelogFile="false" splitStatements="true" stripComments="false"
                  path="db/changelog/sql/002-create-table-tasks.sql"/>
     </changeSet>
+
+    <changeSet author="Kirill Gorkiy" id="2024.28.10_create-table-comments">
+        <sqlFile dbms="postgresql" encoding="utf8" endDelimiter="\nGO"
+                 relativeToChangelogFile="false" splitStatements="true" stripComments="false"
+                 path="db/changelog/sql/003-create-table-comments.sql"/>
+    </changeSet>
 </databaseChangeLog>
