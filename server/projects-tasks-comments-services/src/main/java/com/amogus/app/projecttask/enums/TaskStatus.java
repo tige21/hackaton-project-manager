@@ -5,10 +5,10 @@ import lombok.Getter;
 @Getter
 public enum TaskStatus {
     OPEN("open"),
-    IN_PROGRESS("in_progress"),
+    IN_PROGRESS("inProgress"),
     REVIEW("review"),
     TESTING("testing"),
-    DONE("done");
+    READY("ready");
 
     private final String status;
 

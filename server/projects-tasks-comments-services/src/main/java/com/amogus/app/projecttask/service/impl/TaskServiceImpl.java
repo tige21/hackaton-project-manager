@@ -2,6 +2,7 @@ package com.amogus.app.projecttask.service.impl;
 
 import com.amogus.app.projecttask.dto.PaginatedTasksDto;
 import com.amogus.app.projecttask.dto.TaskDto;
+import com.amogus.app.projecttask.dto.TaskStatusResponseDto;
 import com.amogus.app.projecttask.entity.Project;
 import com.amogus.app.projecttask.entity.Task;
 import com.amogus.app.projecttask.exception.ProjectNotFoundException;
@@ -63,6 +64,27 @@ public class TaskServiceImpl implements TaskService {
 
         return paginatedTasksDto;
     }
+
+    @Override
+    public TaskStatusResponseDto getTasksGroupedByStatus(Long projectId) {
+        List<Task> tasks = taskRepository.findByProjectId(projectId);
+
+        TaskStatusResponseDto response = new TaskStatusResponseDto();
+
+        tasks.forEach(task -> {
+            TaskDto taskDto = taskMapper.toDto(task);
+            switch (task.getStatus()) {
+                case OPEN -> response.getBacklog().add(taskDto);
+                case IN_PROGRESS -> response.getInProgress().add(taskDto);
+                case REVIEW -> response.getReview().add(taskDto);
+                case TESTING -> response.getTesting().add(taskDto);
+                case READY -> response.getReady().add(taskDto);
+            }
+        });
+
+        return response;
+    }
+
 
     @Override
     public Optional<TaskDto> getTaskById(Long id) {
