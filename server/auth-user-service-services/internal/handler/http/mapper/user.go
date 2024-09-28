@@ -17,19 +17,11 @@ func MapToEntityUser(user model.SignUpRequest) entity.User {
 
 func MapToUserWithJWTResponse(code int, user entity.User) response.ViewResponse {
 	var (
-		jwt         *model.JWT
 		updatedDate *string
 	)
 	if user.UpdatedDate != nil {
 		updateTime := user.UpdatedDate.Format(config.IsoTimeLayout)
 		updatedDate = &updateTime
-	}
-
-	if user.JWT != nil {
-		jwt = &model.JWT{
-			Token:        user.JWT.Token,
-			RefreshToken: user.JWT.RefreshToken,
-		}
 	}
 
 	return response.ViewResponse{
@@ -41,7 +33,10 @@ func MapToUserWithJWTResponse(code int, user entity.User) response.ViewResponse 
 			Email:       user.Email,
 			CreatedDate: user.CreatedDate.Format(config.IsoTimeLayout),
 			UpdatedDate: updatedDate,
-			JWT:         jwt,
+			JWT: model.JWT{
+				Token:        user.JWT.Token,
+				RefreshToken: user.JWT.RefreshToken,
+			},
 		},
 	}
 }
@@ -58,7 +53,7 @@ func MapToUserResponse(code int, user entity.User) response.ViewResponse {
 
 	return response.ViewResponse{
 		Code: code,
-		Result: model.SignUpResponse{
+		Result: model.UserResponse{
 			ID:          user.ID,
 			Name:        user.Name,
 			Surname:     user.Surname,

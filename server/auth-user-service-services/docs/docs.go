@@ -6,7 +6,7 @@ const docTemplate = `
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "COMMON-TOXIC-MESSAGE API",
+    "title": "USER-SERVICE API",
     "version": "1.0.1"
   },
   "servers": [
@@ -20,49 +20,25 @@ const docTemplate = `
     }
   ],
   "paths": {
-    "/private/v1/whitelist/file/validate": {
+    "/public/v1/auth/sign-up": {
       "post": {
-        "security": [
-          {
-            "oauth": [
-              "read",
-              "write"
-            ]
-          },
-          {
-            "apiKeyAuth": []
-          }
-        ],
-        "summary": "валидация файла .txt для белого списка",
+        "summary": "регистрация пользователя",
         "tags": [
-          "WHITELIST PRIVATE"
+          "Auth"
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "multipart/form-data": {
+            "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "file": {
-                    "type": "string",
-                    "format": "binary",
-                    "nullable": false,
-                    "description": "файл для загрузки"
-                  }
-                }
-              },
-              "encoding": {
-                "file": {
-                  "style": "form"
-                }
+                "$ref": "#/components/schemas/SignUpRequest"
               }
             }
           }
         },
         "responses": {
-          "200": {
-            "description": "Успешный ответ при валидации для белого списка",
+          "201": {
+            "description": "Успешный ответ",
             "content": {
               "application/json": {
                 "schema": {
@@ -74,7 +50,7 @@ const docTemplate = `
                       "type": "object",
                       "properties": {
                         "result": {
-                          "$ref": "#/components/schemas/SuccessFromFile"
+                          "$ref": "#/components/schemas/UserWithJWT"
                         }
                       }
                     }
@@ -126,49 +102,25 @@ const docTemplate = `
         }
       }
     },
-    "/private/v1/whitelist/file/upload": {
+    "/public/v1/auth/sign-in": {
       "post": {
-        "security": [
-          {
-            "oauth": [
-              "read",
-              "write"
-            ]
-          },
-          {
-            "apiKeyAuth": []
-          }
-        ],
-        "summary": "добавление слов через файл .txt в белый список",
+        "summary": "авторизация пользователя",
         "tags": [
-          "WHITELIST PRIVATE"
+          "Auth"
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "multipart/form-data": {
+            "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "file": {
-                    "type": "string",
-                    "format": "binary",
-                    "nullable": false,
-                    "description": "файл для загрузки"
-                  }
-                }
-              },
-              "encoding": {
-                "file": {
-                  "style": "form"
-                }
+                "$ref": "#/components/schemas/SignInRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Успешный ответ при добавлении слова в белый список",
+            "description": "Успешный ответ",
             "content": {
               "application/json": {
                 "schema": {
@@ -180,7 +132,7 @@ const docTemplate = `
                       "type": "object",
                       "properties": {
                         "result": {
-                          "$ref": "#/components/schemas/SuccessFromFile"
+                          "$ref": "#/components/schemas/UserWithJWT"
                         }
                       }
                     }
@@ -232,22 +184,100 @@ const docTemplate = `
         }
       }
     },
-    "/private/v1/whitelist": {
+    "/public/v1/auth/refresh/{token}": {
+      "get": {
+        "summary": "получение новых токенов",
+        "tags": [
+          "Auth"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "schema": {
+              "type": "string",
+              "example": "c1cfe4b9-f7c2-423c-abfa-6ed1c05a15c5"
+            },
+            "description": "рефреш-токен",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешный ответ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "result": {
+                          "$ref": "#/components/schemas/JWT"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Не получилось обработать данные",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Конфликт",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя проблема сервера",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/public/v1/users": {
       "get": {
         "security": [
           {
-            "oauth": [
-              "read",
-              "write"
-            ]
-          },
-          {
-            "apiKeyAuth": []
+            "bearerAuth": []
           }
         ],
-        "summary": "получение списка слов из белого списка",
+        "summary": "получение списка пользователей",
         "tags": [
-          "WHITELIST PRIVATE"
+          "Users"
         ],
         "parameters": [
           {
@@ -257,10 +287,12 @@ const docTemplate = `
               "type": "string",
               "enum": [
                 "name",
-                "createdAt"
+                "surname",
+                "createdDate",
+                "email"
               ]
             },
-            "description": "Сортировка. Дефолтный - name",
+            "description": "Сортировка. Дефолтный - createDate",
             "required": false
           },
           {
@@ -273,18 +305,8 @@ const docTemplate = `
                 "desc"
               ]
             },
-            "description": "Порядок сортировки. Дефолтный - asc",
+            "description": "Порядок сортировки. Дефолтный - desc",
             "required": false
-          },
-          {
-            "in": "query",
-            "name": "search",
-            "schema": {
-              "type": "string"
-            },
-            "description": "слово для поиска (минимум 3 символа)",
-            "required": false,
-            "example": "спорт"
           },
           {
             "in": "query",
@@ -293,7 +315,7 @@ const docTemplate = `
               "type": "integer"
             },
             "required": false,
-            "example": 10
+            "example": 20
           },
           {
             "in": "query",
@@ -307,7 +329,7 @@ const docTemplate = `
         ],
         "responses": {
           "200": {
-            "description": "Успешный ответ с белым списком",
+            "description": "Успешный ответ",
             "content": {
               "application/json": {
                 "schema": {
@@ -319,7 +341,7 @@ const docTemplate = `
                       "type": "object",
                       "properties": {
                         "result": {
-                          "$ref": "#/components/schemas/ListData"
+                          "$ref": "#/components/schemas/ListUsersWithoutJWT"
                         }
                       }
                     }
@@ -361,494 +383,119 @@ const docTemplate = `
         }
       }
     },
-    "/private/v1/whitelist/term": {
-      "post": {
-        "security": [
-          {
-            "oauth": [
-              "read",
-              "write"
-            ]
-          },
-          {
-            "apiKeyAuth": []
-          }
-        ],
-        "summary": "добавление слова в белый список",
-        "tags": [
-          "WHITELIST PRIVATE"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "name": {
-                    "example": "дурак",
-                    "nullable": false
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Успешный ответ при добавлении слова в черный список",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/SuccessResponse"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "result": {
-                          "$ref": "#/components/schemas/TermWithDate"
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Не получилось обработать данные",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Не авторизован",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Конфликт",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Внутренняя проблема сервера",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/private/v1/whitelist/term/delete": {
-      "post": {
-        "security": [
-          {
-            "oauth": [
-              "read",
-              "write"
-            ]
-          },
-          {
-            "apiKeyAuth": []
-          }
-        ],
-        "summary": "удаление слов из белого списка",
-        "tags": [
-          "WHITELIST PRIVATE"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "termIdList": {
-                    "description": "слово в черный список",
-                    "example": [
-                      "c1cfe4b9-f7c2-423c-abfa-6ed1c05a15c5",
-                      "c1cfe4b9-f7c2-423c-abfa-6ed1c05a52e8"
-                    ],
-                    "nullable": false
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Успешный ответ при удалении разрешенного слова из списка",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/SuccessResponse"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "result": {
-                          "example": true
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Не получилось обработать данные",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Не авторизован",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Не удалось найти данные",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Внутренняя проблема сервера",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/private/v1/blacklist/file/validate": {
-      "post": {
-        "security": [
-          {
-            "oauth": [
-              "read",
-              "write"
-            ]
-          },
-          {
-            "apiKeyAuth": []
-          }
-        ],
-        "summary": "валидация файла .txt для черного списка",
-        "tags": [
-          "BLACKLIST PRIVATE"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "file": {
-                    "type": "string",
-                    "format": "binary",
-                    "nullable": false,
-                    "description": "файл для загрузки"
-                  }
-                }
-              },
-              "encoding": {
-                "file": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Успешный ответ при валидации для черного списка",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/SuccessResponse"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "result": {
-                          "$ref": "#/components/schemas/SuccessFromFile"
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Не получилось обработать данные",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Не авторизован",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Конфликт",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Внутренняя проблема сервера",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/private/v1/blacklist/file/upload": {
-      "post": {
-        "security": [
-          {
-            "oauth": [
-              "read",
-              "write"
-            ]
-          },
-          {
-            "apiKeyAuth": []
-          }
-        ],
-        "summary": "добавление слов через файл .txt в черный список",
-        "tags": [
-          "BLACKLIST PRIVATE"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "file": {
-                    "type": "string",
-                    "format": "binary",
-                    "nullable": false,
-                    "description": "файл для загрузки"
-                  }
-                }
-              },
-              "encoding": {
-                "file": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Успешный ответ при добавлении слова в черный список",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/SuccessResponse"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "result": {
-                          "$ref": "#/components/schemas/SuccessFromFile"
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Не получилось обработать данные",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Не авторизован",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Конфликт",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Внутренняя проблема сервера",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/private/v1/blacklist": {
+    "/public/v1/users/{id}": {
       "get": {
         "security": [
           {
-            "oauth": [
-              "read",
-              "write"
-            ]
-          },
-          {
-            "apiKeyAuth": []
+            "bearerAuth": []
           }
         ],
-        "summary": "получение списка слов из черного списка",
+        "summary": "получение пользователя",
         "tags": [
-          "BLACKLIST PRIVATE"
+          "Users"
         ],
         "parameters": [
           {
-            "in": "query",
-            "name": "sort",
+            "in": "path",
+            "name": "id",
             "schema": {
               "type": "string",
-              "enum": [
-                "name",
-                "createdAt"
-              ]
+              "example": "c1cfe4b9-f7c2-423c-abfa-6ed1c05a15c5"
             },
-            "description": "Сортировка. Дефолтный - name",
-            "required": false
+            "description": "идентификатор пользователя",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешный ответ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "result": {
+                          "$ref": "#/components/schemas/UserWithoutJWT"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           },
+          "400": {
+            "description": "Не получилось обработать данные",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя проблема сервера",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
           {
-            "in": "query",
-            "name": "order",
+            "bearerAuth": []
+          }
+        ],
+        "summary": "редактирование пользователя",
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
             "schema": {
               "type": "string",
-              "enum": [
-                "asc",
-                "desc"
-              ]
+              "example": "c1cfe4b9-f7c2-423c-abfa-6ed1c05a15c5"
             },
-            "description": "Порядок сортировки. Дефолтный - asc",
-            "required": false
-          },
-          {
-            "in": "query",
-            "name": "search",
-            "schema": {
-              "type": "string"
-            },
-            "description": "слово для поиска (минимум 3 символа)",
-            "required": false,
-            "example": "спорт"
-          },
-          {
-            "in": "query",
-            "name": "limit",
-            "schema": {
-              "type": "integer"
-            },
-            "required": false,
-            "example": 10
-          },
-          {
-            "in": "query",
-            "name": "offset",
-            "schema": {
-              "type": "integer"
-            },
-            "required": false,
-            "example": 0
+            "description": "идентификатор пользователя",
+            "required": true
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": "Успешный ответ с черным списком",
+            "description": "Успешный ответ",
             "content": {
               "application/json": {
                 "schema": {
@@ -860,7 +507,7 @@ const docTemplate = `
                       "type": "object",
                       "properties": {
                         "result": {
-                          "$ref": "#/components/schemas/ListData"
+                          "$ref": "#/components/schemas/UserWithoutJWT"
                         }
                       }
                     }
@@ -900,57 +547,38 @@ const docTemplate = `
             }
           }
         }
-      }
-    },
-    "/private/v1/blacklist/term": {
-      "post": {
+      },
+      "delete": {
         "security": [
           {
-            "oauth": [
-              "read",
-              "write"
-            ]
-          },
-          {
-            "apiKeyAuth": []
+            "bearerAuth": []
           }
         ],
-        "summary": "добавление слова в черный список",
+        "summary": "удаление пользователя",
         "tags": [
-          "BLACKLIST PRIVATE"
+          "Users"
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "name": {
-                    "example": "дурак",
-                    "nullable": false
-                  }
-                }
-              }
-            }
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string",
+              "example": "c1cfe4b9-f7c2-423c-abfa-6ed1c05a15c5"
+            },
+            "description": "идентификатор пользователя",
+            "required": true
           }
-        },
+        ],
         "responses": {
           "200": {
-            "description": "Успешный ответ при добавлении слова в черный список",
+            "description": "Успешный ответ",
             "content": {
               "application/json": {
                 "schema": {
                   "allOf": [
                     {
                       "$ref": "#/components/schemas/SuccessResponse"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "result": {
-                          "$ref": "#/components/schemas/TermWithDate"
-                        }
-                      }
                     }
                   ]
                 }
@@ -969,274 +597,6 @@ const docTemplate = `
           },
           "401": {
             "description": "Не авторизован",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Конфликт",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Внутренняя проблема сервера",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/private/v1/blacklist/term/delete": {
-      "post": {
-        "security": [
-          {
-            "oauth": [
-              "read",
-              "write"
-            ]
-          },
-          {
-            "apiKeyAuth": []
-          }
-        ],
-        "summary": "удаление слов из черного списка",
-        "tags": [
-          "BLACKLIST PRIVATE"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "termIdList": {
-                    "description": "слово в черный список",
-                    "example": [
-                      "c1cfe4b9-f7c2-423c-abfa-6ed1c05a15c5",
-                      "c1cfe4b9-f7c2-423c-abfa-6ed1c05a52e8"
-                    ],
-                    "nullable": false
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Успешный ответ при удалении черного слова из списка",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/SuccessResponse"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "result": {
-                          "example": true
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Не получилось обработать данные",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Не авторизован",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Не удалось найти данные",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Внутренняя проблема сервера",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/integration/v1/blacklist/moderate": {
-      "post": {
-        "security": [
-          {
-            "oauth": [
-              "read",
-              "write"
-            ]
-          }
-        ],
-        "summary": "проверка комментария на существование слов из черного списка",
-        "tags": [
-          "INTEGRATION"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "comment": {
-                    "description": "текст для модерации",
-                    "example": "дурак",
-                    "nullable": false
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Успешный ответ c модерированным комментарием",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/SuccessResponse"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "result": {
-                          "$ref": "#/components/schemas/ModerateResponse"
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Не получилось обработать данные",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Внутренняя проблема сервера",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/integration/v1/blacklist/moderate/multi": {
-      "post": {
-        "security": [
-          {
-            "oauth": [
-              "read",
-              "write"
-            ]
-          }
-        ],
-        "summary": "проверка массива комментариев на существование слов из черного списка (лимит 20 объектов)",
-        "tags": [
-          "INTEGRATION"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "items": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/ModerateData"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Успешный ответ c модерированными комментариями",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/SuccessResponse"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "result": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/MultiModerateResponse"
-                          }
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Не получилось обработать данные",
             "content": {
               "application/json": {
                 "schema": {
@@ -1303,23 +663,10 @@ const docTemplate = `
   },
   "components": {
     "securitySchemes": {
-      "apiKeyAuth": {
-        "type": "apiKey",
-        "in": "header",
-        "name": "X-USER-ID"
-      },
-      "oauth": {
-        "type": "oauth2",
-        "flows": {
-          "authorizationCode": {
-            "authorizationUrl": "",
-            "tokenUrl": "",
-            "scopes": {
-              "read": "",
-              "write": ""
-            }
-          }
-        }
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     },
     "schemas": {
@@ -1381,183 +728,214 @@ const docTemplate = `
           }
         }
       },
-      "MultiModerateResponse": {
-        "description": "Модель модерирования списка комментариев",
+      "SignInRequest": {
+        "type": "object",
+        "description": "модель авторизации пользователя",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "электронная почта",
+            "example": "bogatovgrmn@gmail.com",
+            "nullable": false
+          },
+          "password": {
+            "type": "string",
+            "description": "пароль",
+            "example": "qwerty12345",
+            "nullable": false
+          }
+        }
+      },
+      "SignUpRequest": {
+        "type": "object",
+        "description": "модель создания регистрации пользователя",
         "properties": {
           "name": {
             "type": "string",
-            "example": "title",
+            "description": "имя",
+            "example": "German",
             "nullable": false
           },
-          "value": {
+          "surname": {
             "type": "string",
-            "example": "hello world",
+            "description": "фамилия",
+            "example": "Bogatov",
             "nullable": false
           },
-          "status": {
-            "description": "статус после модерации",
-            "example": "APPROVED",
-            "nullable": false,
-            "enum": [
-              "BLOCKED",
-              "APPROVED",
-              "NEUTRAL"
-            ]
+          "email": {
+            "type": "string",
+            "description": "электронная почта",
+            "example": "bogatovgrmn@gmail.com",
+            "nullable": false
           },
-          "term": {
-            "description": "слово из черного списка, по которому не прошла модерация",
-            "example": "null",
-            "nullable": true
+          "password": {
+            "type": "string",
+            "description": "пароль",
+            "example": "qwerty12345",
+            "nullable": false
           }
         }
       },
-      "ModerateResponse": {
-        "description": "Модель модерирования комментарий",
-        "properties": {
-          "status": {
-            "description": "статус после модерации",
-            "example": "APPROVED",
-            "nullable": false,
-            "enum": [
-              "BLOCKED",
-              "APPROVED",
-              "NEUTRAL"
-            ]
-          },
-          "term": {
-            "description": "слово из черного списка, по которому не прошла модерация",
-            "example": "null",
-            "nullable": true
-          }
-        }
-      },
-      "ModerateData": {
+      "UpdateUserRequest": {
         "type": "object",
-        "description": "объект для мультимодерации",
+        "description": "модель обновления пользователя",
         "properties": {
           "name": {
             "type": "string",
-            "example": "title",
+            "description": "имя",
+            "example": "German",
             "nullable": false
           },
-          "value": {
+          "surname": {
             "type": "string",
-            "example": "hello world",
+            "description": "фамилия",
+            "example": "Bogatov",
+            "nullable": false
+          },
+          "email": {
+            "type": "string",
+            "description": "электронная почта",
+            "example": "bogatovgrmn@gmail.com",
             "nullable": false
           }
         }
       },
-      "ListData": {
+      "JWT": {
         "type": "object",
-        "description": "список слов из списка",
+        "description": "модель jwt токена",
         "properties": {
-          "limit": {
-            "type": "integer",
-            "example": 10,
+          "token": {
+            "type": "string",
+            "description": "идентификатор пользователя",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTcyNzU0MjU0NSwianRpIjoiY2NjZDVjMzctMWU3ZS00ODcyLTk4YWUtMzk3NThlMmM0YzZjIiwiZW1haWwiOiJib2dhdG92Z3JtbkBtYWlsLnJ1Iiwicm9sZXMiOlsiZGV2ZWxvcGVyIl19.coCpKjxOS09ksUpKFRK_ZXQolTiNF5ph7p3s5zYEbVE",
             "nullable": false
           },
-          "offset": {
-            "type": "integer",
-            "example": 0,
+          "refreshToken": {
+            "type": "string",
+            "description": "идентификатор пользователя",
+            "example": "909c6a00-76f1-491f-9b07-982705c6d68b",
             "nullable": false
-          },
+          }
+        }
+      },
+      "ListUsersWithoutJWT": {
+        "type": "object",
+        "description": "список пользователей",
+        "properties": {
           "total": {
             "type": "integer",
-            "description": "количество всех слов в списке, подходящих под запрос",
+            "description": "количество всех пользователей",
             "example": 100,
             "nullable": false
           },
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TermWithDate"
+              "$ref": "#/components/schemas/UserWithoutJWT"
             }
           }
         }
       },
-      "SuccessFromFile": {
+      "UserWithoutJWT": {
         "type": "object",
-        "description": "успешный ответ с результат обработки файла",
-        "properties": {
-          "successAddedCount": {
-            "type": "integer",
-            "description": "количество добавленных слов",
-            "example": 1000,
-            "nullable": false
-          },
-          "existCount": {
-            "type": "integer",
-            "description": "количество существующих слов",
-            "example": 1000,
-            "nullable": false
-          },
-          "noValid": {
-            "$ref": "#/components/schemas/NoValid"
-          }
-        }
-      },
-      "NoValid": {
-        "type": "object",
-        "properties": {
-          "count": {
-            "type": "integer",
-            "description": "количество ошибок",
-            "example": 100,
-            "nullable": false
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ErrorValidation"
-            }
-          }
-        }
-      },
-      "ErrorValidation": {
-        "type": "object",
-        "description": "подробный результат с ошибкой валидации",
-        "properties": {
-          "line": {
-            "type": "integer",
-            "description": "строка ошибки (номера строк начинаются с 1)",
-            "example": 1,
-            "nullable": false
-          },
-          "name": {
-            "type": "string",
-            "description": "слово из файла",
-            "example": "прив@т",
-            "nullable": false
-          },
-          "error": {
-            "type": "string",
-            "description": "текст ошибки",
-            "example": "недопустимый символ '@'",
-            "nullable": false
-          }
-        }
-      },
-      "TermWithDate": {
-        "type": "object",
-        "description": "Слово из списка с датой и идентификатором",
+        "description": "модель пользователя без jwt",
         "properties": {
           "id": {
             "type": "string",
-            "description": "идентификатор слова",
+            "description": "идентификатор пользователя",
             "example": "c1cfe4b9-f7c2-423c-abfa-6ed1c05a15c5",
             "nullable": false
           },
           "name": {
             "type": "string",
-            "description": "слово из списка",
-            "example": "дурак",
+            "description": "имя",
+            "example": "German",
             "nullable": false
           },
-          "createdAt": {
+          "surname": {
             "type": "string",
-            "description": "дата добавления слова в черный список",
+            "description": "фамилия",
+            "example": "Bogatov",
+            "nullable": false
+          },
+          "email": {
+            "type": "string",
+            "description": "электронная почта",
+            "example": "bogatovgrmn@gmail.com",
+            "nullable": false
+          },
+          "createdDate": {
+            "type": "string",
+            "description": "дата создания пользователя",
             "example": "2024-05-22T13:03:25Z",
             "nullable": false
+          },
+          "updatedDate": {
+            "type": "string",
+            "description": "дата изменения пользователя",
+            "example": "2024-05-22T13:03:25Z",
+            "nullable": false
+          }
+        }
+      },
+      "UserWithJWT": {
+        "type": "object",
+        "description": "модель пользователя с JWT",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "идентификатор пользователя",
+            "example": "c1cfe4b9-f7c2-423c-abfa-6ed1c05a15c5",
+            "nullable": false
+          },
+          "name": {
+            "type": "string",
+            "description": "имя",
+            "example": "German",
+            "nullable": false
+          },
+          "surname": {
+            "type": "string",
+            "description": "фамилия",
+            "example": "Bogatov",
+            "nullable": false
+          },
+          "email": {
+            "type": "string",
+            "description": "электронная почта",
+            "example": "bogatovgrmn@gmail.com",
+            "nullable": false
+          },
+          "createdDate": {
+            "type": "string",
+            "description": "дата создания пользователя",
+            "example": "2024-05-22T13:03:25Z",
+            "nullable": false
+          },
+          "updatedDate": {
+            "type": "string",
+            "description": "дата изменения пользователя",
+            "example": "2024-05-22T13:03:25Z",
+            "nullable": false
+          },
+          "jwt": {
+            "type": "object",
+            "description": "структура с jwt токеном и рефреш токеном",
+            "nullable": false,
+            "properties": {
+              "token": {
+                "type": "string",
+                "description": "идентификатор пользователя",
+                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTcyNzU0MjU0NSwianRpIjoiY2NjZDVjMzctMWU3ZS00ODcyLTk4YWUtMzk3NThlMmM0YzZjIiwiZW1haWwiOiJib2dhdG92Z3JtbkBtYWlsLnJ1Iiwicm9sZXMiOlsiZGV2ZWxvcGVyIl19.coCpKjxOS09ksUpKFRK_ZXQolTiNF5ph7p3s5zYEbVE",
+                "nullable": false
+              },
+              "refreshToken": {
+                "type": "string",
+                "description": "идентификатор пользователя",
+                "example": "909c6a00-76f1-491f-9b07-982705c6d68b",
+                "nullable": false
+              }
+            }
           }
         }
       }

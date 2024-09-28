@@ -15,7 +15,7 @@ type User struct {
 	Roles       []string
 	CreatedDate time.Time
 	UpdatedDate *time.Time
-	JWT         *JWT
+	JWT         JWT
 }
 
 func (u *User) GenerateID() {
@@ -39,7 +39,7 @@ func (u *User) SetPasswordHash(hash string) {
 }
 
 func (u *User) SetJWT(token, refreshToken string) {
-	u.JWT = &JWT{
+	u.JWT = JWT{
 		Token:        token,
 		RefreshToken: refreshToken,
 	}
