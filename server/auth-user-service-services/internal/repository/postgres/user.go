@@ -33,12 +33,12 @@ func NewUser(client postgresql.Client) IUser {
 func (u *User) CreateUser(ctx context.Context, user entity.User) error {
 	q := `
 	INSERT INTO users 
-    	(id,name,surname,email,password,roles,created_date) 
+    	(id,name,surname,email,password,role,created_date) 
     VALUES 
 		($1,$2,$3,$4,$5,$6,$7);
 		`
 
-	_, err := u.client.Exec(ctx, q, user.ID, user.Name, user.Surname, user.Email, user.Password, user.Roles, user.CreatedDate)
+	_, err := u.client.Exec(ctx, q, user.ID, user.Name, user.Surname, user.Email, user.Password, user.Role, user.CreatedDate)
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) {
@@ -54,13 +54,13 @@ func (u *User) CreateUser(ctx context.Context, user entity.User) error {
 // GetUserByEmailAndPassword - получение пользователя по емайл и паролю
 func (u *User) GetUserByEmailAndPassword(ctx context.Context, email, password string) (entity.User, error) {
 	q := `
-		SELECT id,name,surname,email,password,roles,created_date,updated_date 
+		SELECT id,name,surname,email,password,role,created_date,updated_date 
 		FROM users
 		WHERE email=$1 AND password=$2;	
 		`
 
 	var user entity.User
-	err := u.client.QueryRow(ctx, q, email, password).Scan(&user.ID, &user.Name, &user.Surname, &user.Email, &user.Password, &user.Roles, &user.CreatedDate, &user.UpdatedDate)
+	err := u.client.QueryRow(ctx, q, email, password).Scan(&user.ID, &user.Name, &user.Surname, &user.Email, &user.Password, &user.Role, &user.CreatedDate, &user.UpdatedDate)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return entity.User{}, apperror.ErrUserNotFound
@@ -74,13 +74,13 @@ func (u *User) GetUserByEmailAndPassword(ctx context.Context, email, password st
 // GetUserByID - получение пользователя по идентификатору
 func (u *User) GetUserByID(ctx context.Context, id string) (entity.User, error) {
 	q := `
-		SELECT id,name,surname,email,password,roles,created_date,updated_date 
+		SELECT id,name,surname,email,password,role,created_date,updated_date 
 		FROM users
 		WHERE id=$1;	
 		`
 
 	var user entity.User
-	err := u.client.QueryRow(ctx, q, id).Scan(&user.ID, &user.Name, &user.Surname, &user.Email, &user.Password, &user.Roles, &user.CreatedDate, &user.UpdatedDate)
+	err := u.client.QueryRow(ctx, q, id).Scan(&user.ID, &user.Name, &user.Surname, &user.Email, &user.Password, &user.Role, &user.CreatedDate, &user.UpdatedDate)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return entity.User{}, apperror.ErrUserNotFound

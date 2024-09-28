@@ -1,9 +1,15 @@
 package entity
 
 import (
-	"github.com/GermanBogatov/user-service/internal/config"
 	"github.com/google/uuid"
 	"time"
+)
+
+type RoleType string
+
+const (
+	RoleDeveloper RoleType = "developer"
+	RoleAdmin     RoleType = "admin"
 )
 
 type User struct {
@@ -12,7 +18,7 @@ type User struct {
 	Surname     string
 	Email       string
 	Password    string
-	Roles       []string
+	Role        RoleType
 	CreatedDate time.Time
 	UpdatedDate *time.Time
 	JWT         JWT
@@ -27,11 +33,11 @@ func (u *User) GenerateCreatedDate() {
 }
 
 func (u *User) AddRoleDeveloper() {
-	u.Roles = append(u.Roles, config.RoleDeveloper)
+	u.Role = RoleDeveloper
 }
 
 func (u *User) AddRoleAdmin() {
-	u.Roles = append(u.Roles, config.RoleAdmin)
+	u.Role = RoleAdmin
 }
 
 func (u *User) SetPasswordHash(hash string) {
