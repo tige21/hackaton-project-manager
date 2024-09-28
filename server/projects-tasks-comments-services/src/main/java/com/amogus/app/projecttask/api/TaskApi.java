@@ -2,6 +2,7 @@ package com.amogus.app.projecttask.api;
 
 import com.amogus.app.projecttask.dto.PaginatedTasksDto;
 import com.amogus.app.projecttask.dto.TaskDto;
+import com.amogus.app.projecttask.dto.TaskStatusResponseDto;
 import com.amogus.app.projecttask.entity.Task;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -56,6 +57,15 @@ public interface TaskApi {
     })
     @GetMapping("/{id}")
     ResponseEntity<TaskDto> getTaskById(@PathVariable Long id);
+
+    @Operation(summary = "Получение задач по статусам для проекта", description = "Возвращает задачи по статусам для указанного проекта")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Задачи по проекту сгруппированы по статусам", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TaskStatusResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Проект или задачи не найдены", content = @Content)
+    })
+    @GetMapping("/project/{projectId}/statuses")
+    ResponseEntity<TaskStatusResponseDto> getTasksByStatus(@PathVariable Long projectId);
+
 
     @Operation(summary = "Обновление задачи", description = "Обновляет существующую задачу по её ID")
     @ApiResponses(value = {
