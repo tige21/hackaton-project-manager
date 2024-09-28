@@ -122,7 +122,7 @@ func (h *Handler) UpdateUserByID(w http.ResponseWriter, r *http.Request) error {
 	user := mapper.MapToEntityUserUpdate(userUpdate)
 	user.ID = selfUserID
 
-	result, err := h.userService.UpdateUserID(ctx, user)
+	result, err := h.userService.UpdateUserByID(ctx, user)
 	if err != nil {
 		return apperror.InternalServerError(err)
 	}

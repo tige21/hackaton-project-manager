@@ -7,6 +7,7 @@ import (
 	"github.com/GermanBogatov/user-service/internal/handler/http/model"
 )
 
+// MapToEntityUser - маппинг в модель пользователя
 func MapToEntityUser(user model.SignUpRequest) entity.User {
 	return entity.User{
 		Name:    user.Name,
@@ -15,6 +16,7 @@ func MapToEntityUser(user model.SignUpRequest) entity.User {
 	}
 }
 
+// MapToEntityUserUpdate - маппинг в модель редактирования пользователя
 func MapToEntityUserUpdate(user model.UserUpdate) entity.UserUpdate {
 	return entity.UserUpdate{
 		Name:    user.Name,
@@ -23,6 +25,7 @@ func MapToEntityUserUpdate(user model.UserUpdate) entity.UserUpdate {
 	}
 }
 
+// MapToEntityFilter - маппинг в модель фильтра
 func MapToEntityFilter(limit, offset int, sort, order string) entity.Filter {
 	return entity.Filter{
 		Limit:  limit,
@@ -32,6 +35,7 @@ func MapToEntityFilter(limit, offset int, sort, order string) entity.Filter {
 	}
 }
 
+// mapOrderType - маппинг поля сортировки
 func mapOrderType(order string) string {
 	switch order {
 	case config.OrderCreatedDate:
@@ -41,24 +45,12 @@ func mapOrderType(order string) string {
 	}
 }
 
+// MapToUserWithJWTResponse - маппинг пользователя с jwt в ответ
 func MapToUserWithJWTResponse(code int, user entity.User) response.ViewResponse {
-	var (
-		updatedDate *string
-	)
-	if user.UpdatedDate != nil {
-		updateTime := user.UpdatedDate.Format(config.IsoTimeLayout)
-		updatedDate = &updateTime
-	}
-
 	return response.ViewResponse{
 		Code: code,
 		Result: model.SignUpResponse{
-			ID:          user.ID,
-			Name:        user.Name,
-			Surname:     user.Surname,
-			Email:       user.Email,
-			CreatedDate: user.CreatedDate.Format(config.IsoTimeLayout),
-			UpdatedDate: updatedDate,
+			UserResponse: mapUserToResponse(user),
 			JWT: model.JWT{
 				Token:        user.JWT.Token,
 				RefreshToken: user.JWT.RefreshToken,
@@ -67,6 +59,7 @@ func MapToUserWithJWTResponse(code int, user entity.User) response.ViewResponse 
 	}
 }
 
+// mapUserToResponse - маппинг пользователя в модель ответ
 func mapUserToResponse(user entity.User) model.UserResponse {
 	var (
 		updatedDate *string
@@ -87,6 +80,7 @@ func mapUserToResponse(user entity.User) model.UserResponse {
 	}
 }
 
+// MapToUserResponse - маппинг пользователя в модель ответ
 func MapToUserResponse(code int, user entity.User) response.ViewResponse {
 	return response.ViewResponse{
 		Code:   code,
@@ -94,6 +88,7 @@ func MapToUserResponse(code int, user entity.User) response.ViewResponse {
 	}
 }
 
+// MapToUsersResponse - маппинг пользователей в модель ответ
 func MapToUsersResponse(code int, users []entity.User) response.ViewResponse {
 	result := make([]model.UserResponse, 0, len(users))
 	for _, user := range users {
@@ -104,6 +99,8 @@ func MapToUsersResponse(code int, users []entity.User) response.ViewResponse {
 		Result: result,
 	}
 }
+
+// MapToJWTResponse - маппинг токена в модель с jwt
 func MapToJWTResponse(code int, token, refreshToken string) response.ViewResponse {
 	return response.ViewResponse{
 		Code: code,

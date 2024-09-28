@@ -21,7 +21,7 @@ type IUser interface {
 	GetUserByID(ctx context.Context, id string) (entity.User, error)
 	GetUserByEmailAndPassword(ctx context.Context, email, password string) (entity.User, error)
 	DeleteUserByID(ctx context.Context, id string) error
-	UpdateUserID(ctx context.Context, userUpdate entity.UserUpdate) (entity.User, error)
+	UpdateUserByID(ctx context.Context, userUpdate entity.UserUpdate) (entity.User, error)
 	GetUsers(ctx context.Context, filter entity.Filter) ([]entity.User, error)
 }
 
@@ -110,8 +110,8 @@ func (u *User) DeleteUserByID(ctx context.Context, id string) error {
 	return nil
 }
 
-// UpdateUserID - редактирование пользователя
-func (u *User) UpdateUserID(ctx context.Context, userUpdate entity.UserUpdate) (entity.User, error) {
+// UpdateUserByID - редактирование пользователя
+func (u *User) UpdateUserByID(ctx context.Context, userUpdate entity.UserUpdate) (entity.User, error) {
 	query, args := prepareQueryUpdate(userUpdate)
 	var user entity.User
 	err := u.client.QueryRow(ctx, query, args...).Scan(&user.ID, &user.Name, &user.Surname, &user.Email, &user.Password, &user.Role, &user.CreatedDate, &user.UpdatedDate)
@@ -156,6 +156,7 @@ func prepareQueryUpdate(user entity.UserUpdate) (string, []interface{}) {
 	return query, args
 }
 
+// GetUsers - получение пользователей
 func (u *User) GetUsers(ctx context.Context, filter entity.Filter) ([]entity.User, error) {
 	q := fmt.Sprintf(`
 			SELECT id,name,surname,email,password,role,created_date,updated_date
