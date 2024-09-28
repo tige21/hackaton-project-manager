@@ -15,6 +15,14 @@ func MapToEntityUser(user model.SignUpRequest) entity.User {
 	}
 }
 
+func MapToEntityUserUpdate(user model.UserUpdate) entity.UserUpdate {
+	return entity.UserUpdate{
+		Name:    user.Name,
+		Surname: user.Surname,
+		Email:   user.Email,
+	}
+}
+
 func MapToUserWithJWTResponse(code int, user entity.User) response.ViewResponse {
 	var (
 		updatedDate *string

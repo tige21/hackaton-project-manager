@@ -24,6 +24,13 @@ type User struct {
 	JWT         JWT
 }
 
+type UserUpdate struct {
+	ID      string
+	Name    *string
+	Surname *string
+	Email   *string
+}
+
 func (u *User) GenerateID() {
 	u.ID = uuid.New().String()
 }

@@ -21,6 +21,13 @@ type SignUpResponse struct {
 	JWT         JWT     `json:"jwt"`
 }
 
+type UserUpdate struct {
+	ID      string  `json:"id"`
+	Name    *string `json:"name"`
+	Surname *string `json:"surname"`
+	Email   *string `json:"email"`
+}
+
 type UserResponse struct {
 	ID          string  `json:"id"`
 	Name        string  `json:"name"`

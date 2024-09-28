@@ -27,6 +27,30 @@ func ValidateSignUpUser(user model.SignUpRequest) error {
 	return nil
 }
 
+func ValidateUserUpdate(user model.UserUpdate) error {
+	if user.Name == nil && user.Surname == nil && user.Email == nil {
+		return apperror.ErrAllFieldAreEmpty
+	}
+
+	if user.Name != nil && strings.TrimSpace(*user.Name) == "" {
+		return apperror.ErrEmptyName
+	}
+	if user.Surname != nil && strings.TrimSpace(*user.Surname) == "" {
+		return apperror.ErrEmptySurname
+	}
+	if user.Email != nil {
+		if strings.TrimSpace(*user.Email) == "" {
+			return apperror.ErrEmptyEmail
+		}
+
+		if !strings.Contains(*user.Email, "@") {
+			return apperror.ErrInvalidEmailFormat
+		}
+	}
+
+	return nil
+}
+
 func ValidateSignInUser(user model.SignInRequest) error {
 	if strings.TrimSpace(user.Email) == "" {
 		return apperror.ErrEmptyEmail
