@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/GermanBogatov/user-service/internal/common/apperror"
+	"github.com/GermanBogatov/user-service/internal/common/metrics"
 	"github.com/GermanBogatov/user-service/internal/entity"
 	"github.com/GermanBogatov/user-service/pkg/postgresql"
 	"github.com/jackc/pgerrcode"
@@ -37,6 +38,7 @@ func NewUser(client postgresql.Client) IUser {
 
 // CreateUser - создание пользователя
 func (u *User) CreateUser(ctx context.Context, user entity.User) error {
+	defer metrics.ObserveRequestDurationPerMethodDB(metrics.Postgres, metrics.CreateUserDb)()
 	q := `
 	INSERT INTO users 
     	(id,name,surname,email,password,role,created_date) 
@@ -46,6 +48,7 @@ func (u *User) CreateUser(ctx context.Context, user entity.User) error {
 
 	_, err := u.client.Exec(ctx, q, user.ID, user.Name, user.Surname, user.Email, user.Password, user.Role, user.CreatedDate)
 	if err != nil {
+		metrics.IncRequestTotalDB(metrics.CreateUserDb, metrics.FailStatus)
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) {
 			if pgErr.Code == pgerrcode.UniqueViolation {
@@ -54,11 +57,15 @@ func (u *User) CreateUser(ctx context.Context, user entity.User) error {
 			return err
 		}
 	}
+
+	metrics.IncRequestTotalDB(metrics.CreateUserDb, metrics.OkStatus)
 	return nil
 }
 
 // GetUserByEmailAndPassword - получение пользователя по емайл и паролю
 func (u *User) GetUserByEmailAndPassword(ctx context.Context, email, password string) (entity.User, error) {
+	defer metrics.ObserveRequestDurationPerMethodDB(metrics.Postgres, metrics.GetUserByEmailAndPasswordDb)()
+
 	q := `
 		SELECT id,name,surname,email,password,role,created_date,updated_date 
 		FROM users
@@ -68,17 +75,21 @@ func (u *User) GetUserByEmailAndPassword(ctx context.Context, email, password st
 	var user entity.User
 	err := u.client.QueryRow(ctx, q, email, password).Scan(&user.ID, &user.Name, &user.Surname, &user.Email, &user.Password, &user.Role, &user.CreatedDate, &user.UpdatedDate)
 	if err != nil {
+		metrics.IncRequestTotalDB(metrics.GetUserByEmailAndPasswordDb, metrics.FailStatus)
 		if errors.Is(err, pgx.ErrNoRows) {
 			return entity.User{}, apperror.ErrUserNotFound
 		}
 		return entity.User{}, err
 	}
 
+	metrics.IncRequestTotalDB(metrics.GetUserByEmailAndPasswordDb, metrics.OkStatus)
 	return user, nil
 }
 
 // GetUserByID - получение пользователя по идентификатору
 func (u *User) GetUserByID(ctx context.Context, id string) (entity.User, error) {
+	defer metrics.ObserveRequestDurationPerMethodDB(metrics.Postgres, metrics.GetUserByIDDb)()
+
 	q := `
 		SELECT id,name,surname,email,password,role,created_date,updated_date 
 		FROM users
@@ -88,37 +99,47 @@ func (u *User) GetUserByID(ctx context.Context, id string) (entity.User, error) 
 	var user entity.User
 	err := u.client.QueryRow(ctx, q, id).Scan(&user.ID, &user.Name, &user.Surname, &user.Email, &user.Password, &user.Role, &user.CreatedDate, &user.UpdatedDate)
 	if err != nil {
+		metrics.IncRequestTotalDB(metrics.GetUserByIDDb, metrics.FailStatus)
 		if errors.Is(err, pgx.ErrNoRows) {
 			return entity.User{}, apperror.ErrUserNotFound
 		}
 		return entity.User{}, err
 	}
 
+	metrics.IncRequestTotalDB(metrics.GetUserByIDDb, metrics.OkStatus)
 	return user, nil
 }
 
 func (u *User) DeleteUserByID(ctx context.Context, id string) error {
+	defer metrics.ObserveRequestDurationPerMethodDB(metrics.Postgres, metrics.DeleteUserByIDDb)()
+
 	q := `
 	DELETE FROM users 
     WHERE id=$1;`
 
 	_, err := u.client.Exec(ctx, q, id)
 	if err != nil {
+		metrics.IncRequestTotalDB(metrics.DeleteUserByIDDb, metrics.FailStatus)
 		return err
 	}
 
+	metrics.IncRequestTotalDB(metrics.DeleteUserByIDDb, metrics.OkStatus)
 	return nil
 }
 
 // UpdateUserByID - редактирование пользователя
 func (u *User) UpdateUserByID(ctx context.Context, userUpdate entity.UserUpdate) (entity.User, error) {
+	defer metrics.ObserveRequestDurationPerMethodDB(metrics.Postgres, metrics.UpdateUserByIDDb)()
+
 	query, args := prepareQueryUpdate(userUpdate)
 	var user entity.User
 	err := u.client.QueryRow(ctx, query, args...).Scan(&user.ID, &user.Name, &user.Surname, &user.Email, &user.Password, &user.Role, &user.CreatedDate, &user.UpdatedDate)
 	if err != nil {
+		metrics.IncRequestTotalDB(metrics.UpdateUserByIDDb, metrics.FailStatus)
 		return entity.User{}, err
 	}
 
+	metrics.IncRequestTotalDB(metrics.UpdateUserByIDDb, metrics.OkStatus)
 	return user, nil
 }
 
@@ -158,6 +179,8 @@ func prepareQueryUpdate(user entity.UserUpdate) (string, []interface{}) {
 
 // GetUsers - получение пользователей
 func (u *User) GetUsers(ctx context.Context, filter entity.Filter) ([]entity.User, error) {
+	defer metrics.ObserveRequestDurationPerMethodDB(metrics.Postgres, metrics.GetUsersDb)()
+
 	q := fmt.Sprintf(`
 			SELECT id,name,surname,email,password,role,created_date,updated_date
 			FROM users
@@ -166,6 +189,7 @@ func (u *User) GetUsers(ctx context.Context, filter entity.Filter) ([]entity.Use
 
 	rows, err := u.client.Query(ctx, q)
 	if err != nil {
+		metrics.IncRequestTotalDB(metrics.GetUsersDb, metrics.FailStatus)
 		return nil, err
 	}
 
@@ -175,10 +199,12 @@ func (u *User) GetUsers(ctx context.Context, filter entity.Filter) ([]entity.Use
 		var user entity.User
 		errScan := rows.Scan(&user.ID, &user.Name, &user.Surname, &user.Email, &user.Password, &user.Role, &user.CreatedDate, &user.UpdatedDate)
 		if errScan != nil {
+			metrics.IncRequestTotalDB(metrics.GetUsersDb, metrics.FailStatus)
 			return nil, err
 		}
 		users = append(users, user)
 	}
 
+	metrics.IncRequestTotalDB(metrics.GetUsersDb, metrics.OkStatus)
 	return users, nil
 }

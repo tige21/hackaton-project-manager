@@ -10,7 +10,7 @@ var (
 
 const (
 	PasswordSalt  = "sad342mslfd23412sdfsdf1234hgf"
-	JWTSecret     = "62RJhmkQJu9IEdaX6SZWnGnCJovTzoTq"
+	JWTSecret     = "N~D/c&G01YmV|wx(>1OcBs(ltYnrzx~7LR**pN24uHuxMAC#;BowvbL&9:i0`Sx"
 	IsoTimeLayout = "2006-01-02T15:04:05Z" // Формат ISO 8601
 
 	ParamID     = "id"

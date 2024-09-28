@@ -22,6 +22,19 @@ const (
 
 	Postgres DbRequestType = "postgres"
 	Cache    DbRequestType = "cache"
+
+	CreateUserDb                DbRequestType = "CreateUserDb"
+	GetUserByIDDb               DbRequestType = "GetUserByID"
+	GetUserByEmailAndPasswordDb DbRequestType = "GetUserByEmailAndPassword"
+	DeleteUserByIDDb            DbRequestType = "DeleteUserByID"
+	UpdateUserByIDDb            DbRequestType = "UpdateUserByID"
+	GetUsersDb                  DbRequestType = "GetUsers"
+
+	GetCache             DbRequestType = "Get"
+	GetUserCache         DbRequestType = "GetUser"
+	DeleteCache          DbRequestType = "Delete"
+	SetUserCache         DbRequestType = "SetUser"
+	SetRefreshTokenCache DbRequestType = "SetRefreshToken"
 )
 
 var (
