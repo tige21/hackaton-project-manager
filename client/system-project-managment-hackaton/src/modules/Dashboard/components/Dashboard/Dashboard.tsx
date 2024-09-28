@@ -30,6 +30,7 @@ import {
 import { DroppableContainer } from "../DroppableContainer/DroppableContainer.tsx";
 import { SortableTask } from "../SortableTask/SortableTask.tsx";
 import { Task } from "../Task/Task.tsx";
+import {useGetTasksQuery} from "../../api.ts";
 
 const dropAnimation: DropAnimation = {
   sideEffects: defaultDropAnimationSideEffects({
@@ -75,7 +76,7 @@ const PLACEHOLDER_ID = "placeholder";
 
 const containerNames = {
   backlog: "Запланировано",
-  inProgress: "В процессе",
+  inProgress: "В работе",
   review: "На рассмотрении",
   testing: "На тестировании",
   ready: "Завершено",
@@ -130,14 +131,8 @@ export function Dashboard({
   const recentlyMovedToNewContainer = useRef(false);
   const isSortingContainer = activeId ? containers.includes(activeId) : false;
 
-  /**
-   * Custom collision detection strategy optimized for multiple containers
-   *
-   * - First, find any droppable containers intersecting with the pointer.
-   * - If there are none, find intersecting containers with the active draggable.
-   * - If there are no intersecting containers, return the last matched intersection
-   *
-   */
+  const { data, error } = useGetTasksQuery();
+
   const collisionDetectionStrategy: CollisionDetection = useCallback(
     (args) => {
       if (activeId && activeId in items) {
