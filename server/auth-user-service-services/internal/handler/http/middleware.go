@@ -23,10 +23,12 @@ func appMiddleware(h appHandler) http.HandlerFunc {
 		routeContext := chi.RouteContext(r.Context())
 		pattern := routeContext.RoutePattern()
 		defer metrics.ObserveRequestDurationSeconds(method, pattern)()
+
 		if routeContext.RoutePatterns[0] != authV1+"/*" {
 
 			authHeader := strings.Split(r.Header.Get("Authorization"), "Bearer ")
 			if len(authHeader) != 2 {
+				metrics.IncRequestTotal(metrics.FailStatus, method, pattern)
 				response.RespondError(w, r, apperror.UnauthorizedError(apperror.ErrMalformedToken))
 				return
 			}
@@ -36,23 +38,27 @@ func appMiddleware(h appHandler) http.HandlerFunc {
 
 			token, err := jwt.ParseWithClaims(accessToken, &entity.UserClaims{}, func(token *jwt.Token) (interface{}, error) {
 				if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+					metrics.IncRequestTotal(metrics.FailStatus, method, pattern)
 					return nil, apperror.ErrInvalidSigningMethod
 				}
 				return key, nil
 			})
 
 			if err != nil {
+				metrics.IncRequestTotal(metrics.FailStatus, method, pattern)
 				response.RespondError(w, r, apperror.UnauthorizedError(errors.Wrap(err, apperror.ErrMalformedToken.Error())))
 				return
 			}
 
 			if !token.Valid {
+				metrics.IncRequestTotal(metrics.FailStatus, method, pattern)
 				response.RespondError(w, r, apperror.UnauthorizedError(apperror.ErrTokenIsInspired))
 				return
 			}
 
 			claims, ok := token.Claims.(*entity.UserClaims)
 			if !ok {
+				metrics.IncRequestTotal(metrics.FailStatus, method, pattern)
 				response.RespondError(w, r, apperror.UnauthorizedError(err))
 				return
 			}
