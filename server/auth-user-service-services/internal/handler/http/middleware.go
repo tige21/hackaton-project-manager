@@ -58,7 +58,7 @@ func appMiddleware(h appHandler) http.HandlerFunc {
 			}
 
 			setCtxValue(r, config.ParamID, claims.Id)
-			setCtxValue(r, config.ParamRoles, claims.Roles)
+			setCtxValue(r, config.ParamRole, claims.Role)
 			//todo прокинуть ID
 			fmt.Println(claims.Id)
 		}

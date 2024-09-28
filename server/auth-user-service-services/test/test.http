@@ -21,12 +21,12 @@ Content-Type: application/json
 }
 
 ### Refresh
-GET http://localhost:8080/public/v1/auth/refresh/8a84f3af-c6aa-4364-ad4c-1ef53ed5e1e4
+GET http://localhost:8080/public/v1/auth/refresh/6e916116-9675-4851-8b0b-28c400cb01ba
 Content-Type: application/json
 
 
 ### Get User By ID
 POST http://localhost:8080/public/v1/users/633d8ac3-c938-4c04-89f2-279e08add07c
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTcyNzU0NTQyOSwianRpIjoiNjMzZDhhYzMtYzkzOC00YzA0LTg5ZjItMjc5ZTA4YWRkMDdjIiwiZW1haWwiOiJib2dhdG92Z3JtbkBtYWlsLnJ1Iiwicm9sZXMiOlsiZGV2ZWxvcGVyIl19.VefwQD3bBj2Ntzz6TqUDdAkda_PWHV6qq59Ylt70YdU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTcyNzU0OTQ3NiwianRpIjoiYTEzZjA0ODQtZGU0Yi00MDdhLWI5NGQtMWUyMTk0YzQ4MTE3IiwiZW1haWwiOiJib2dhdG92Z3JtbkBtYWlsLnJ1Iiwicm9sZSI6ImRldmVsb3BlciJ9.6xGDsVPvkSKt_Ckc7pLxwFMSF8EfTh1TnBW3JEu-58s
 

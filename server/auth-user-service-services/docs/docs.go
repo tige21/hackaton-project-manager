@@ -807,7 +807,7 @@ const docTemplate = `
           "token": {
             "type": "string",
             "description": "идентификатор пользователя",
-            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTcyNzU0MjU0NSwianRpIjoiY2NjZDVjMzctMWU3ZS00ODcyLTk4YWUtMzk3NThlMmM0YzZjIiwiZW1haWwiOiJib2dhdG92Z3JtbkBtYWlsLnJ1Iiwicm9sZXMiOlsiZGV2ZWxvcGVyIl19.coCpKjxOS09ksUpKFRK_ZXQolTiNF5ph7p3s5zYEbVE",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTcyNzU0OTUxOSwianRpIjoiYTEzZjA0ODQtZGU0Yi00MDdhLWI5NGQtMWUyMTk0YzQ4MTE3IiwiZW1haWwiOiJib2dhdG92Z3JtbkBtYWlsLnJ1Iiwicm9sZSI6ImRldmVsb3BlciJ9.pFJSZwFe0zpnmRuMQp7S4OvOknh1mTyuhfj6z0f4Afw",
             "nullable": false
           },
           "refreshToken": {
@@ -926,7 +926,7 @@ const docTemplate = `
               "token": {
                 "type": "string",
                 "description": "идентификатор пользователя",
-                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTcyNzU0MjU0NSwianRpIjoiY2NjZDVjMzctMWU3ZS00ODcyLTk4YWUtMzk3NThlMmM0YzZjIiwiZW1haWwiOiJib2dhdG92Z3JtbkBtYWlsLnJ1Iiwicm9sZXMiOlsiZGV2ZWxvcGVyIl19.coCpKjxOS09ksUpKFRK_ZXQolTiNF5ph7p3s5zYEbVE",
+                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTcyNzU0OTUxOSwianRpIjoiYTEzZjA0ODQtZGU0Yi00MDdhLWI5NGQtMWUyMTk0YzQ4MTE3IiwiZW1haWwiOiJib2dhdG92Z3JtbkBtYWlsLnJ1Iiwicm9sZSI6ImRldmVsb3BlciJ9.pFJSZwFe0zpnmRuMQp7S4OvOknh1mTyuhfj6z0f4Afw",
                 "nullable": false
               },
               "refreshToken": {
