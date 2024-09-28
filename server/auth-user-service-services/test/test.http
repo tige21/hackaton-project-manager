@@ -6,7 +6,7 @@ Content-Type: application/json
 {
   "name": "German",
   "surname": "Bogatov",
-  "email": "bogatovgrmn@mail.ru",
+  "email": "bogatovg@mail.ru",
   "password": "23Bogatov"
 }
 
@@ -31,7 +31,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTcyNzU0OTQ3NiwianRpIjoiYTEzZjA0ODQtZGU0Yi00MDdhLWI5NGQtMWUyMTk0YzQ4MTE3IiwiZW1haWwiOiJib2dhdG92Z3JtbkBtYWlsLnJ1Iiwicm9sZSI6ImRldmVsb3BlciJ9.6xGDsVPvkSKt_Ckc7pLxwFMSF8EfTh1TnBW3JEu-58s
 
 ### Delete User By ID
-DELETE http://localhost:8080/public/v1/users/633d8ac3-c938-4c04-89f2-279e08add07c
+DELETE http://localhost:8080/public/v1/users/f731c87d-8485-4513-a7b9-c3e84c17129c
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTcyNzU0OTQ3NiwianRpIjoiYTEzZjA0ODQtZGU0Yi00MDdhLWI5NGQtMWUyMTk0YzQ4MTE3IiwiZW1haWwiOiJib2dhdG92Z3JtbkBtYWlsLnJ1Iiwicm9sZSI6ImRldmVsb3BlciJ9.6xGDsVPvkSKt_Ckc7pLxwFMSF8EfTh1TnBW3JEu-58s
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTcyNzU1NjE5OSwianRpIjoiZjczMWM4N2QtODQ4NS00NTEzLWE3YjktYzNlODRjMTcxMjljIiwiZW1haWwiOiJib2dhdG92Z0BtYWlsLnJ1Iiwicm9sZSI6ImRldmVsb3BlciJ9.cNmFLXFRfBCd8MgdlvClba0agl-WX5Qe2M40DQAyzSA
 
