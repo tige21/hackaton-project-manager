@@ -54,7 +54,8 @@ func (h *Handler) InitRoutes() *chi.Mux {
 		r.Get("/refresh/{id}", appMiddleware(h.UpdateRefreshToken))
 	})
 	r.Route(publicV1, func(r chi.Router) {
-		r.Post("/users/{id}", appMiddleware(h.GetUserByID))
+		r.Get("/users/{id}", appMiddleware(h.GetUserByID))
+		r.Delete("/users/{id}", appMiddleware(h.DeleteUserByID))
 	})
 
 	return r

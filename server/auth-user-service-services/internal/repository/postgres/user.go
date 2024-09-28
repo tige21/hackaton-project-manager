@@ -17,6 +17,7 @@ type IUser interface {
 	CreateUser(ctx context.Context, user entity.User) error
 	GetUserByID(ctx context.Context, id string) (entity.User, error)
 	GetUserByEmailAndPassword(ctx context.Context, email, password string) (entity.User, error)
+	DeleteUserByID(ctx context.Context, id string) error
 }
 
 type User struct {
@@ -89,4 +90,17 @@ func (u *User) GetUserByID(ctx context.Context, id string) (entity.User, error) 
 	}
 
 	return user, nil
+}
+
+func (u *User) DeleteUserByID(ctx context.Context, id string) error {
+	q := `
+	DELETE FROM users 
+    WHERE id=$1;`
+
+	_, err := u.client.Exec(ctx, q, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
