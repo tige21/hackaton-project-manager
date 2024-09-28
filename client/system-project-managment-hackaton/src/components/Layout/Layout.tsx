@@ -1,15 +1,14 @@
-// import { View, Text } from "react-native";
-// import React from "react";
-// import { Outlet } from "react-router-dom";
-// import SideBar from "../SideBar/SideBar";
+import React from "react";
+import { Outlet } from "react-router-dom";
+import SideBar from "../SideBar/SideBar";
+import styles from "./Layout.module.scss";
+const Layout = () => {
+  return (
+    <div className={styles.layout}>
+      <SideBar />
+      <Outlet />
+    </div>
+  );
+};
 
-// const Layout = () => {
-//   return (
-//     <div style={{display: "flex" }}>
-//       <SideBar />
-//       <Outlet />
-//     </div>
-//   );
-// };
-
-// export default Layout;
+export default Layout;
