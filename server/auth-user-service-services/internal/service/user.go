@@ -2,10 +2,8 @@ package service
 
 import (
 	"context"
-	"github.com/GermanBogatov/user-service/internal/common/apperror"
 	"github.com/GermanBogatov/user-service/internal/entity"
 	"github.com/GermanBogatov/user-service/internal/repository/postgres"
-	"github.com/pkg/errors"
 )
 
 var _ IUser = &User{}
@@ -33,10 +31,6 @@ func (u *User) CreateUser(ctx context.Context, user entity.User) error {
 func (u *User) GetUserByID(ctx context.Context, id string) (entity.User, error) {
 	user, err := u.userRepo.GetUserByID(ctx, id)
 	if err != nil {
-		if errors.Is(err, apperror.ErrUserNotFound) {
-			return entity.User{}, apperror.NotFoundError(err)
-		}
-
 		return entity.User{}, err
 	}
 
