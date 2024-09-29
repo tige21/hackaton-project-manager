@@ -1,4 +1,5 @@
 import {TaskPriority, TaskType} from "../../utils/taskUtils.tsx";
+import {UniqueIdentifier} from "@dnd-kit/core";
 
 declare interface ITask {
     id: string;
@@ -13,10 +14,10 @@ declare interface ITask {
 }
 
 declare interface ITasksByStatuses {
-    backlog: string[];
-    inProgress: string[];
-    review: string[],
-    testing: string[],
-    ready: string[],
+    backlog: UniqueIdentifier[];
+    inProgress: UniqueIdentifier[];
+    review: UniqueIdentifier[],
+    testing: UniqueIdentifier[],
+    ready: UniqueIdentifier[],
 }
   

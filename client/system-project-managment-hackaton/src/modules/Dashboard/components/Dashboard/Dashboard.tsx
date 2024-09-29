@@ -31,7 +31,7 @@ import { SortableTask } from "../SortableTask/SortableTask.tsx";
 import { Task } from "../Task/Task.tsx";
 import TaskDetails from "../../../Tasks/components/TaskDetail/TaskDetail.tsx";
 import {ITask} from "../../type";
-import {useGetTasksQuery} from "../../api.ts";
+import {useGetTasksByStatusesQuery, useGetTasksQuery} from "../../api.ts";
 
 const dropAnimation: DropAnimation = {
   sideEffects: defaultDropAnimationSideEffects({
@@ -103,46 +103,46 @@ export function Dashboard({
   selectedTask,
   onClose,
 }: Props) {
-  const tasks: ITask[] = [
-    {
-      id: "A1",
-      title: "Task 1 расписать",
-      project: "IT INNO HACK",
-      description: "Описание задачи",
-      deadlineDate: "15.10.2024",
-      executor: "Ivanov@yandex.ru",
-      type: "EPIC",
-      priority: "MEDIUM",
-      status: "В работе",
-    },
-    {
-      id: "A2",
-      title: "Task 2 расписать",
-      project: "IT INNO HACK",
-      description: "Описание задачи",
-      deadlineDate: "16.10.2024",
-      executor: "Petrov@yandex.ru",
-      type: "TASK",
-      priority: "MEDIUM",
-      status: "Запланировано",
-    },
-    {
-      id: "A3",
-      title: "Task 3 расписать",
-      project: "IT INNO HACK",
-      description: "Описание задачи",
-      deadlineDate: "16.10.2024",
-      executor: "Petrov@yandex.ru",
-      type: "BUG",
-      priority: "CRITICAL",
-      status: "Запланировано",
-    },
-  ];
+  // const tasks: ITask[] = [
+  //   {
+  //     id: "A1",
+  //     title: "Task 1 расписать",
+  //     project: "IT INNO HACK",
+  //     description: "Описание задачи",
+  //     deadlineDate: "15.10.2024",
+  //     executor: "Ivanov@yandex.ru",
+  //     type: "EPIC",
+  //     priority: "MEDIUM",
+  //     status: "В работе",
+  //   },
+  //   {
+  //     id: "A2",
+  //     title: "Task 2 расписать",
+  //     project: "IT INNO HACK",
+  //     description: "Описание задачи",
+  //     deadlineDate: "16.10.2024",
+  //     executor: "Petrov@yandex.ru",
+  //     type: "TASK",
+  //     priority: "MEDIUM",
+  //     status: "Запланировано",
+  //   },
+  //   {
+  //     id: "A3",
+  //     title: "Task 3 расписать",
+  //     project: "IT INNO HACK",
+  //     description: "Описание задачи",
+  //     deadlineDate: "16.10.2024",
+  //     executor: "Petrov@yandex.ru",
+  //     type: "BUG",
+  //     priority: "CRITICAL",
+  //     status: "Запланировано",
+  //   },
+  // ];
 
   const [items, setItems] = useState<Items>(
     () =>
       initialItems ?? {
-        backlog: ["A1", "A2", "A3"],
+        backlog: [1, 2, 3],
         inProgress: [],
         review: [],
         testing: [],
@@ -158,8 +158,15 @@ export function Dashboard({
   const recentlyMovedToNewContainer = useRef(false);
   const isSortingContainer = activeId ? containers.includes(activeId) : false;
 
-  const { data, error } = useGetTasksQuery();
-  fetch("http://localhost:8081/api/tasks")
+  const { data: tasks, error: tasksError, isFetching } = useGetTasksQuery();
+  const { data: tasksByStatuses, error: tasksByStatusesError } = useGetTasksByStatusesQuery("1");
+
+  useEffect(() => {
+    if (tasksByStatuses) {
+      setItems(tasksByStatuses)
+    }
+  }, [tasksByStatuses])
+
   const collisionDetectionStrategy: CollisionDetection = useCallback(
     (args) => {
       if (activeId && activeId in items) {
@@ -264,6 +271,10 @@ export function Dashboard({
   // const handleCloseTaskDetails = () => {
   //   setSelectedTask(null); // Закрываем TaskDetails
   // };
+
+  // if (isFetching) {
+  //   return null
+  // }
 
   return (
     <DndContext
@@ -439,7 +450,7 @@ export function Dashboard({
             >
               <SortableContext items={items[containerId]} strategy={strategy}>
                 {items[containerId].map((value, index) => {
-                  const task = tasks.find((task) => task.id === value);
+                  const task = tasks?.find((task) => task.id === value);
 
                   return (
                     <div
@@ -480,7 +491,7 @@ export function Dashboard({
   );
 
   function renderSortableItemDragOverlay(id: UniqueIdentifier) {
-    const task = tasks.find((task) => task.id === id);
+    const task = tasks?.find((task) => task.id === id);
 
     return (
       <Task
