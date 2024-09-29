@@ -10,8 +10,6 @@ import {
   DragOverlay,
   DropAnimation,
   getFirstCollision,
-  MouseSensor,
-  TouchSensor,
   Modifiers,
   UniqueIdentifier,
   useSensors,
@@ -19,6 +17,7 @@ import {
   MeasuringStrategy,
   KeyboardCoordinateGetter,
   defaultDropAnimationSideEffects,
+  PointerSensor,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -30,6 +29,8 @@ import {
 import { DroppableContainer } from "../DroppableContainer/DroppableContainer.tsx";
 import { SortableTask } from "../SortableTask/SortableTask.tsx";
 import { Task } from "../Task/Task.tsx";
+import TaskDetails from "../../../Tasks/components/TaskDetail/TaskDetail.tsx";
+import PeopleModal from "../PeopleModal/PeopleModal.tsx";
 import {useGetTasksQuery} from "../../api.ts";
 
 const dropAnimation: DropAnimation = {
@@ -69,6 +70,9 @@ interface Props {
   trashable?: boolean;
   scrollable?: boolean;
   vertical?: boolean;
+  selectedTask: ITask | null;
+  handleTaskClick: (task: ITask) => void;
+  onClose: () => void;
 }
 
 export const TRASH_ID = "void";
@@ -96,33 +100,57 @@ export function Dashboard({
   strategy = verticalListSortingStrategy,
   vertical = false,
   scrollable,
+  handleTaskClick,
+  selectedTask,
+  onClose,
 }: Props) {
-  const tasks = [
+  const tasks: ITask[] = [
     {
       id: "A1",
-      title: "Task 1",
-      deadlineDate: "30.09.2024",
-      type: "task",
-      priority: "medium",
+      title: "Task 1 расписать",
+      project: "IT INNO HACK",
+      description: "Описание задачи",
+      deadlineDate: "15.10.2024",
+      executor: "Ivanov@yandex.ru",
+      type: "Эпик",
+      priority: "Medium",
+      status: "В работе",
     },
     {
       id: "A2",
-      title: "Task 2",
-      deadlineDate: "01.10.2024",
-      type: "epic",
-      priority: "critical",
+      title: "Task 2 расписать",
+      project: "IT INNO HACK",
+      description: "Описание задачи",
+      deadlineDate: "16.10.2024",
+      executor: "Petrov@yandex.ru",
+      type: "Задача",
+      priority: "High",
+      status: "Запланировано",
+    },
+    {
+      id: "A3",
+      title: "Task 3 расписать",
+      project: "IT INNO HACK",
+      description: "Описание задачи",
+      deadlineDate: "16.10.2024",
+      executor: "Petrov@yandex.ru",
+      type: "Задача",
+      priority: "Critical",
+      status: "Запланировано",
     },
   ];
+
   const [items, setItems] = useState<Items>(
     () =>
       initialItems ?? {
-        backlog: ["A1", "A2"],
+        backlog: ["A1", "A2", "A3"],
         inProgress: [],
         review: [],
         testing: [],
         ready: [],
       }
   );
+  // const [selectedTask, setSelectedTask] = useState(null); // Новое состояние для выбранной задачи
   const [containers, setContainers] = useState(
     Object.keys(items) as UniqueIdentifier[]
   );
@@ -144,28 +172,22 @@ export function Dashboard({
         });
       }
 
-      // Start by finding any intersecting droppable
       const pointerIntersections = pointerWithin(args);
       const intersections =
         pointerIntersections.length > 0
-          ? // If there are droppables intersecting with the pointer, return those
-            pointerIntersections
+          ? pointerIntersections
           : rectIntersection(args);
       let overId = getFirstCollision(intersections, "id");
 
       if (overId != null) {
         if (overId === TRASH_ID) {
-          // If the intersecting droppable is the trash, return early
-          // Remove this if you're not using trashable functionality in your app
           return intersections;
         }
 
         if (overId in items) {
           const containerItems = items[overId];
 
-          // If a container is matched and it contains items (columns 'A', 'B', 'C')
           if (containerItems.length > 0) {
-            // Return the closest droppable within that container
             overId = closestCenter({
               ...args,
               droppableContainers: args.droppableContainers.filter(
@@ -182,21 +204,25 @@ export function Dashboard({
         return [{ id: overId }];
       }
 
-      // When a draggable item moves to a new container, the layout may shift
-      // and the `overId` may become `null`. We manually set the cached `lastOverId`
-      // to the id of the draggable item that was moved to the new container, otherwise
-      // the previous `overId` will be returned which can cause items to incorrectly shift positions
       if (recentlyMovedToNewContainer.current) {
         lastOverId.current = activeId;
       }
 
-      // If no droppable is matched, return the last match
       return lastOverId.current ? [{ id: lastOverId.current }] : [];
     },
     [activeId, items]
   );
+
   const [clonedItems, setClonedItems] = useState<Items | null>(null);
-  const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    })
+  );
+
+
   const findContainer = (id: UniqueIdentifier) => {
     if (id in items) {
       return id;
@@ -219,8 +245,6 @@ export function Dashboard({
 
   const onDragCancel = () => {
     if (clonedItems) {
-      // Reset items to their original state in case items have been
-      // Dragged across containers
       setItems(clonedItems);
     }
 
@@ -233,6 +257,14 @@ export function Dashboard({
       recentlyMovedToNewContainer.current = false;
     });
   }, [items]);
+
+  // const handleTaskClick = (task) => {
+  //   setSelectedTask(task); // Открываем TaskDetails при клике на задачу
+  // };
+
+  // const handleCloseTaskDetails = () => {
+  //   setSelectedTask(null); // Закрываем TaskDetails
+  // };
 
   return (
     <DndContext
@@ -382,7 +414,6 @@ export function Dashboard({
     >
       <div
         style={{
-    
           display: "inline-grid",
           boxSizing: "border-box",
           padding: 20,
@@ -415,21 +446,27 @@ export function Dashboard({
                   const task = tasks.find((task) => task.id === value);
 
                   return (
-                    <SortableTask
-                      type={task?.type || "TASK"}
-                      priority={task?.priority || "MEDIUM"}
-                      deadlineDate={task?.deadlineDate || "invalid date"}
-                      disabled={isSortingContainer}
-                      title={task?.title || value}
-                      key={task?.id || value}
-                      id={task?.id || value}
-                      index={index}
-                      handle={handle}
-                      style={getItemStyles}
-                      wrapperStyle={wrapperStyle}
-                      containerId={containerId}
-                      getIndex={getIndex}
-                    />
+                    <div
+                      key={task?.id}
+                      onClick={() => task && handleTaskClick(task)}
+                    >
+                      <SortableTask
+                        type={task?.type || "TASK"}
+                        handleClick={() => console.log("123")}
+                        priority={task?.priority || "MEDIUM"}
+                        deadlineDate={task?.deadlineDate || "invalid date"}
+                        disabled={isSortingContainer}
+                        title={task?.title || value}
+                        key={task?.id || value}
+                        id={task?.id || value}
+                        index={index}
+                        handle={handle}
+                        style={getItemStyles}
+                        wrapperStyle={wrapperStyle}
+                        containerId={containerId}
+                        getIndex={getIndex}
+                      />
+                    </div>
                   );
                 })}
               </SortableContext>
@@ -437,12 +474,14 @@ export function Dashboard({
           ))}
         </SortableContext>
       </div>
+      {selectedTask && <TaskDetails task={selectedTask} onClose={onClose} />}
       {createPortal(
         <DragOverlay adjustScale={adjustScale} dropAnimation={dropAnimation}>
           {activeId ? renderSortableItemDragOverlay(activeId) : null}
         </DragOverlay>,
         document.body
       )}
+      {/* Show People Modal */}
     </DndContext>
   );
 

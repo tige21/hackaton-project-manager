@@ -1,11 +1,12 @@
 import React from "react";
-import { Button, Select } from "antd";
-import { PlusOutlined, FilterOutlined } from "@ant-design/icons";
+// import { Select } from "antd";
+import { CheckSquareOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import styles from "./TasksPage.module.scss";
 import TaskCard from "../components/TaskCaed/TaskCard";
 import SideBar from "../../../components/SideBar/SideBar";
+import Button from "../../../components/Button/Button";
 
-const { Option } = Select;
+// const { Option } = Select;
 
 const tasksData = [
   {
@@ -38,23 +39,47 @@ const tasksData = [
 ];
 
 const TasksPage: React.FC = () => {
+  const handleAutoDistribute = () => {
+    console.log("Автоматическое распределение задач");
+  };
+
+  const handleCreateTask = () => {
+    console.log("Создать задачу");
+  };
+
   return (
     <div className={styles.taskPage}>
       {/* Заголовок и действия */}
       <SideBar />
       <div className={styles.container}>
         <div className={styles.header}>
-          <div style={{flex: 1}}>
-            <div style={{ fontWeight: "bold", fontSize: 72 }}>Все задачи</div>
-            <div className={styles.actions}>
-              <Button type="primary" icon={<PlusOutlined />}>
-                Создать задачу
-              </Button>
-              <Button>Автоматическое распределение задач</Button>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              flexDirection: "row",
+              width: "100%",
+            }}
+          >
+            <div style={{ fontWeight: "bold", fontSize: 60 }}>Все задачи</div>
+            <div style={{ display: "flex", flexDirection: "row", height: "100%", gap:20 }}>
+              <Button
+                indentation={12}
+                text="Автоматическое распределение задач"
+                icon={
+                  <CheckSquareOutlined />
+                }
+                onClick={handleAutoDistribute}
+              />
+
+              <Button
+                text="Создать задачу"
+                icon={<PlusCircleOutlined />}
+                onClick={handleCreateTask} indentation={12}              />
             </div>
           </div>
 
-          <div>
+          {/* <div className={styles.filters}>
             <Select
               defaultValue="date"
               style={{ width: 120 }}
@@ -63,8 +88,11 @@ const TasksPage: React.FC = () => {
               <Option value="date">Дата</Option>
               <Option value="name">Название</Option>
             </Select>
-            <Button icon={<FilterOutlined />}>Фильтровать</Button>
-          </div>
+            <Button
+              icon={<FilterOutlined />}
+              text="Фильтровать"
+              onClick={handleCreateTask} indentation={12}            />
+          </div> */}
         </div>
 
         {/* Таблица задач */}
