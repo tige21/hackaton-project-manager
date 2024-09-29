@@ -16,8 +16,8 @@ POST http://localhost:8080/public/v1/auth/sign-in
 Content-Type: application/json
 
 {
-  "email": "bogatovgrmn@mail.ru",
-  "password": "23Bogatov"
+  "email": "bogatovgrmn@gmail.com",
+  "password": "qwerty12345"
 }
 
 ### Refresh
@@ -51,4 +51,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsI
   "name": "German",
   "surname": "Bogatov",
   "email": "bogatovg@mail.ru"
+}
+
+### Update Private User by ID
+
+PATCH http://localhost:8080/private/v1/users/ef904506-dc65-42c6-b44e-619ad805efd8
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsidXNlcnMiXSwiZXhwIjoxNzI3NTcyNzcwLCJqdGkiOiJjMWNmZTRiOS1mN2MyLTQyM2MtYWJmYS02ZWQxYzA1YTE1YzUiLCJlbWFpbCI6ImJvZ2F0b3Zncm1uQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiJ9.uKQKrKrQVgzYHk_MPJmS7u-K08IR49RppUuTWQ8ffSs
+
+{
+
 }

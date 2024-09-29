@@ -27,6 +27,12 @@ type UserUpdate struct {
 	Email   *string `json:"email"`
 }
 
+// UserUpdatePrivate - модель при приватного редактировании пользователя
+type UserUpdatePrivate struct {
+	UserUpdate
+	Role *string `json:"role"`
+}
+
 // UserResponse - модель пользователя
 type UserResponse struct {
 	ID          string  `json:"id"`
@@ -35,6 +41,12 @@ type UserResponse struct {
 	Email       string  `json:"email"`
 	CreatedDate string  `json:"createdDate"`
 	UpdatedDate *string `json:"updatedDate"`
+}
+
+// UserPrivateResponse - модель приватного пользователя
+type UserPrivateResponse struct {
+	UserResponse
+	Role string `json:"role"`
 }
 
 // JWT - модель для токена с рефрешом

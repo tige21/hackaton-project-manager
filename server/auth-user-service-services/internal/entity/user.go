@@ -33,6 +33,12 @@ type UserUpdate struct {
 	Email   *string
 }
 
+// UserUpdatePrivate - модель приватного обновления пользователя
+type UserUpdatePrivate struct {
+	UserUpdate
+	Role *RoleType
+}
+
 // Filter - модель фильтра
 type Filter struct {
 	Limit  int

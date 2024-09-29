@@ -25,6 +25,23 @@ func MapToEntityUserUpdate(user model.UserUpdate) entity.UserUpdate {
 	}
 }
 
+// MapToEntityUserUpdatePrivate - маппинг в модель приватного редактирования пользователя
+func MapToEntityUserUpdatePrivate(user model.UserUpdatePrivate) entity.UserUpdatePrivate {
+
+	u := entity.UserUpdatePrivate{}
+	u.UserUpdate.Name = user.Name
+	u.UserUpdate.Surname = user.Surname
+	u.UserUpdate.Email = user.Email
+
+	if user.Role != nil {
+		role := entity.RoleType(*user.Role)
+		u.Role = &role
+		return u
+	}
+
+	return u
+}
+
 // MapToEntityFilter - маппинг в модель фильтра
 func MapToEntityFilter(limit, offset int, sort, order string) entity.Filter {
 	return entity.Filter{
@@ -59,6 +76,32 @@ func MapToUserWithJWTResponse(code int, user entity.User) response.ViewResponse 
 	}
 }
 
+// mapPrivateUserToResponse - маппинг приватного пользователя в модель ответ
+func mapPrivateUserToResponse(user entity.User) model.UserPrivateResponse {
+	var (
+		updatedDate *string
+	)
+
+	if user.UpdatedDate != nil {
+		updateTime := user.UpdatedDate.Format(config.IsoTimeLayout)
+		updatedDate = &updateTime
+	}
+
+	u := model.UserResponse{
+		ID:          user.ID,
+		Name:        user.Name,
+		Surname:     user.Surname,
+		Email:       user.Email,
+		CreatedDate: user.CreatedDate.Format(config.IsoTimeLayout),
+		UpdatedDate: updatedDate,
+	}
+
+	return model.UserPrivateResponse{
+		UserResponse: u,
+		Role:         string(user.Role),
+	}
+}
+
 // mapUserToResponse - маппинг пользователя в модель ответ
 func mapUserToResponse(user entity.User) model.UserResponse {
 	var (
@@ -85,6 +128,14 @@ func MapToUserResponse(code int, user entity.User) response.ViewResponse {
 	return response.ViewResponse{
 		Code:   code,
 		Result: mapUserToResponse(user),
+	}
+}
+
+// MapToPrivateUserResponse - маппинг приватного пользователя в модель ответ
+func MapToPrivateUserResponse(code int, user entity.User) response.ViewResponse {
+	return response.ViewResponse{
+		Code:   code,
+		Result: mapPrivateUserToResponse(user),
 	}
 }
 

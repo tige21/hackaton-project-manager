@@ -29,6 +29,7 @@ const (
 	DeleteUserByIDDb            DbRequestType = "DeleteUserByID"
 	UpdateUserByIDDb            DbRequestType = "UpdateUserByID"
 	GetUsersDb                  DbRequestType = "GetUsers"
+	UpdatePrivateUserByIDDb     DbRequestType = "UpdatePrivateUserByID"
 
 	GetCache             DbRequestType = "Get"
 	GetUserCache         DbRequestType = "GetUser"

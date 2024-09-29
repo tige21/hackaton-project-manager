@@ -17,8 +17,8 @@ var (
 	ErrAllFieldAreEmpty     = errors.New("all fields are empty")
 	ErrInvalidSort          = errors.New("invalid param 'sort'")
 	ErrInvalidOrder         = errors.New("invalid param 'order'")
-
-	ErrRedisNil = errors.New("не найдена запись в редисе")
+	ErrInvalidRoleType      = errors.New("invalid role type")
+	ErrRedisNil             = errors.New("не найдена запись в редисе")
 )
 
 const (

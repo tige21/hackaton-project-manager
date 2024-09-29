@@ -3,6 +3,7 @@ package validator
 import (
 	"github.com/GermanBogatov/user-service/internal/common/apperror"
 	"github.com/GermanBogatov/user-service/internal/config"
+	"github.com/GermanBogatov/user-service/internal/entity"
 	"github.com/GermanBogatov/user-service/internal/handler/http/model"
 	"strings"
 )
@@ -50,6 +51,39 @@ func ValidateUserUpdate(user model.UserUpdate) error {
 			return apperror.ErrInvalidEmailFormat
 		}
 	}
+
+	return nil
+}
+
+// ValidateUserUpdatePrivate - валидация пользователя при приватном редактировании
+func ValidateUserUpdatePrivate(user model.UserUpdatePrivate) error {
+	if user.Name == nil && user.Surname == nil && user.Email == nil && user.Role == nil {
+		return apperror.ErrAllFieldAreEmpty
+	}
+
+	if user.Role != nil {
+		if entity.RoleType(*user.Role) != entity.RoleAdmin && entity.RoleType(*user.Role) != entity.RoleDeveloper {
+			return apperror.ErrInvalidRoleType
+		}
+	}
+
+	if user.Name != nil && strings.TrimSpace(*user.Name) == "" {
+		return apperror.ErrEmptyName
+	}
+	if user.Surname != nil && strings.TrimSpace(*user.Surname) == "" {
+		return apperror.ErrEmptySurname
+	}
+	if user.Email != nil {
+		if strings.TrimSpace(*user.Email) == "" {
+			return apperror.ErrEmptyEmail
+		}
+
+		if !strings.Contains(*user.Email, "@") {
+			return apperror.ErrInvalidEmailFormat
+		}
+	}
+
+	return nil
 
 	return nil
 }
