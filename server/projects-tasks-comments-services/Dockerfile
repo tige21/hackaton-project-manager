@@ -15,7 +15,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Этап 2: Запуск приложения
-FROM openjdk:17-jdk-alpine
+FROM openjdk:17-jdk
 
 # Установка рабочей директории
 WORKDIR /app

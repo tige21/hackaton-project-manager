@@ -1,9 +1,10 @@
 import React from 'react';
-import { Button } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusCircleOutlined } from '@ant-design/icons';
 import styles from './ProjectsPage.module.scss';
 import ProjectCard from '../components/ProjectCard/ProjectCard';
 import SideBar from '../../../components/SideBar/SideBar';
+import Button from '../../../components/Button/Button';
+import { useGetUserProjectsQuery } from '../api';
 
 const projects = [
   {
@@ -13,6 +14,7 @@ const projects = [
     admin: 'Ivanov@yandex.ru',
     adminName: 'Иванов Иван',
   },
+
   {
     title: 'IT-отдел',
     participants: ['https://example.com/avatar3.jpg', 'https://example.com/avatar4.jpg'],
@@ -37,22 +39,29 @@ const projects = [
 ];
 
 const ProjectsPage: React.FC = () => {
+
+  // const { data: projects, error, isLoading } = useGetUserProjectsQuery();
+
+  // if (isLoading) return <p>Loading projects...</p>;
+  // if (error) return <p>An error occurred: {error.message}</p>;
+
   return (
     <div className={styles.projectsPageContainer}>
       {/* Отображение SideBar */}
       <SideBar />
       <div className={styles.projectsContent}>
         <div className={styles.header}>
-          <h1>ВСЕ ПРОЕКТЫ</h1>
-          <Button type="primary" icon={<PlusOutlined />}>
-            Создать задачу
-          </Button>
+          <div style={{ fontWeight: "bold", fontSize: 60 }}>ВСЕ ПРОЕКТЫ</div>
+          <Button
+                text="Создать задачу"
+                icon={<PlusCircleOutlined />}
+               indentation={12}/>
         </div>
         <div className={styles.projectGrid}>
           {projects.map((project, index) => (
             <ProjectCard
               key={index}
-              title={project.title}
+              name={project.title}
               participants={project.participants}
               creationDate={project.creationDate}
               admin={project.admin}
