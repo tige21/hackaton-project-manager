@@ -15,10 +15,11 @@ var (
 	ErrInvalidEmailFormat   = errors.New("invalid email format")
 	ErrEmptyPassword        = errors.New("field 'password' is empty")
 	ErrAllFieldAreEmpty     = errors.New("all fields are empty")
-	ErrInvalidSort          = errors.New("invalid param 'sort'")
-	ErrInvalidOrder         = errors.New("invalid param 'order'")
-
-	ErrRedisNil = errors.New("не найдена запись в редисе")
+	ErrInvalidParamSort     = errors.New("invalid param 'sort'")
+	ErrInvalidParamOrder    = errors.New("invalid param 'order'")
+	ErrInvalidParamRole     = errors.New("invalid param 'role'")
+	ErrInvalidRoleType      = errors.New("invalid role type")
+	ErrRedisNil             = errors.New("не найдена запись в редисе")
 )
 
 const (

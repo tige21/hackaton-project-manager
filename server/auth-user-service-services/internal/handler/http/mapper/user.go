@@ -25,14 +25,38 @@ func MapToEntityUserUpdate(user model.UserUpdate) entity.UserUpdate {
 	}
 }
 
+// MapToEntityUserUpdatePrivate - маппинг в модель приватного редактирования пользователя
+func MapToEntityUserUpdatePrivate(user model.UserUpdatePrivate) entity.UserUpdatePrivate {
+
+	u := entity.UserUpdatePrivate{}
+	u.UserUpdate.Name = user.Name
+	u.UserUpdate.Surname = user.Surname
+	u.UserUpdate.Email = user.Email
+
+	if user.Role != nil {
+		role := entity.RoleType(*user.Role)
+		u.Role = &role
+		return u
+	}
+
+	return u
+}
+
 // MapToEntityFilter - маппинг в модель фильтра
-func MapToEntityFilter(limit, offset int, sort, order string) entity.Filter {
-	return entity.Filter{
+func MapToEntityFilter(limit, offset int, sort, order string, role *string) entity.Filter {
+	filter := entity.Filter{
 		Limit:  limit,
 		Offset: offset,
 		Sort:   sort,
 		Order:  mapOrderType(order),
 	}
+	if role == nil {
+		return filter
+	}
+
+	r := entity.RoleType(*role)
+	filter.Role = &r
+	return filter
 }
 
 // mapOrderType - маппинг поля сортировки
@@ -59,7 +83,7 @@ func MapToUserWithJWTResponse(code int, user entity.User) response.ViewResponse 
 	}
 }
 
-// mapUserToResponse - маппинг пользователя в модель ответ
+// mapPrivateUserToResponse - маппинг пользователя в модель ответ
 func mapUserToResponse(user entity.User) model.UserResponse {
 	var (
 		updatedDate *string
@@ -77,11 +101,20 @@ func mapUserToResponse(user entity.User) model.UserResponse {
 		Email:       user.Email,
 		CreatedDate: user.CreatedDate.Format(config.IsoTimeLayout),
 		UpdatedDate: updatedDate,
+		Role:        string(user.Role),
 	}
 }
 
 // MapToUserResponse - маппинг пользователя в модель ответ
 func MapToUserResponse(code int, user entity.User) response.ViewResponse {
+	return response.ViewResponse{
+		Code:   code,
+		Result: mapUserToResponse(user),
+	}
+}
+
+// MapToPrivateUserResponse - маппинг приватного пользователя в модель ответ
+func MapToPrivateUserResponse(code int, user entity.User) response.ViewResponse {
 	return response.ViewResponse{
 		Code:   code,
 		Result: mapUserToResponse(user),

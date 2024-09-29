@@ -15,6 +15,7 @@ type IUser interface {
 	GetUserByEmailAndPassword(ctx context.Context, email, password string) (entity.User, error)
 	DeleteUserByID(ctx context.Context, id string) error
 	UpdateUserByID(ctx context.Context, userUpdate entity.UserUpdate) (entity.User, error)
+	UpdatePrivateUserByID(ctx context.Context, userUpdate entity.UserUpdatePrivate) (entity.User, error)
 }
 
 type User struct {
@@ -70,4 +71,9 @@ func (u *User) UpdateUserByID(ctx context.Context, userUpdate entity.UserUpdate)
 // GetUsers - получение списка пользователей
 func (u *User) GetUsers(ctx context.Context, filter entity.Filter) ([]entity.User, error) {
 	return u.userRepo.GetUsers(ctx, filter)
+}
+
+// UpdatePrivateUserByID - приватное обновление пользователя
+func (u *User) UpdatePrivateUserByID(ctx context.Context, userUpdate entity.UserUpdatePrivate) (entity.User, error) {
+	return u.userRepo.UpdatePrivateUserByID(ctx, userUpdate)
 }

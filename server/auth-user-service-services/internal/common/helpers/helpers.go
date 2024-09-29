@@ -50,6 +50,16 @@ func GetStringWithDefaultFromQuery(r *http.Request, key, defaultParam string) st
 	return param
 }
 
+// GetOptionalParamFromQuery - получение значения из query, либо nil при его отсутствии
+func GetOptionalParamFromQuery(r *http.Request, key string) *string {
+	param := r.URL.Query().Get(key)
+	if strings.TrimSpace(param) == "" {
+		return nil
+	}
+
+	return &param
+}
+
 // GetLimitAndOffset - получение лимита и офсета из query (если нет параметров, то дополнение дефолтными)
 func GetLimitAndOffset(r *http.Request, keyOffset, keyLimit string) (int, int, error) {
 	var limit, offset int

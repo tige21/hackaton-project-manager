@@ -8,8 +8,13 @@ import (
 type RoleType string
 
 const (
-	RoleDeveloper RoleType = "developer"
-	RoleAdmin     RoleType = "admin"
+	RoleDeveloper      RoleType = "developer"
+	RoleAdmin          RoleType = "admin"
+	RoleBackend        RoleType = "backend"
+	RoleFrontend       RoleType = "frontend"
+	RoleDesigner       RoleType = "designer"
+	RoleDevops         RoleType = "devops"
+	RoleProjectManager RoleType = "project-manager"
 )
 
 // User - модель пользователя
@@ -20,9 +25,9 @@ type User struct {
 	Email       string
 	Password    string
 	Role        RoleType
+	JWT         JWT
 	CreatedDate time.Time
 	UpdatedDate *time.Time
-	JWT         JWT
 }
 
 // UserUpdate - модель обновления пользователя
@@ -33,12 +38,19 @@ type UserUpdate struct {
 	Email   *string
 }
 
+// UserUpdatePrivate - модель приватного обновления пользователя
+type UserUpdatePrivate struct {
+	UserUpdate
+	Role *RoleType
+}
+
 // Filter - модель фильтра
 type Filter struct {
 	Limit  int
 	Offset int
 	Sort   string
 	Order  string
+	Role   *RoleType
 }
 
 func (u *User) GenerateID() {
@@ -51,10 +63,6 @@ func (u *User) GenerateCreatedDate() {
 
 func (u *User) AddRoleDeveloper() {
 	u.Role = RoleDeveloper
-}
-
-func (u *User) AddRoleAdmin() {
-	u.Role = RoleAdmin
 }
 
 func (u *User) SetPasswordHash(hash string) {
