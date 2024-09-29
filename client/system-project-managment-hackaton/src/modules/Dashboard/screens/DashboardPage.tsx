@@ -3,6 +3,8 @@ import { Dashboard } from "../components/Dashboard/Dashboard";
 import SideBar from "../../../components/SideBar/SideBar";
 import styles from "./DashboardPage.module.scss";
 import PeopleModal from "../components/PeopleModal/PeopleModal";
+import CustomTaskModal from "../components/CustomTaskModal/CustomTaskModal";
+import CreateTaskModal from "../components/CustomTaskModal/CustomTaskModal";
 
 const DashboardPage: React.FC = () => {
   const [isPeopleModalVisible, setIsPeopleModalVisible] = useState(false); // Modal state
@@ -16,6 +18,17 @@ const DashboardPage: React.FC = () => {
     setSelectedTask(null);
   };
 
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const openModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setIsModalVisible(false);
+  };
+
+  console.log(isModalVisible)
   const showModal = () => setIsPeopleModalVisible(true);
   const hideModal = () => setIsPeopleModalVisible(false);
 
@@ -25,8 +38,10 @@ const DashboardPage: React.FC = () => {
       <div
         className={styles.dashboardContainer}
         onClick={() => {
-          if (selectedTask !== null) {
+          if (selectedTask !== null || isModalVisible !== false) {
             setSelectedTask(null);
+            setIsModalVisible(false);
+            console.log("Close modal");
           }
         }}
       >
@@ -47,7 +62,7 @@ const DashboardPage: React.FC = () => {
               </span>
               Люди
             </button>
-            <button className={styles.customButton}>
+            <button onClick={openModal} className={styles.customButton}>
               <span role="img" aria-label="icon">
                 ➕
               </span>
@@ -61,8 +76,10 @@ const DashboardPage: React.FC = () => {
           handleTaskClick={handleTaskClick}
           onClose={handleCloseTaskDetails}
         />
-      </div>
+      <CreateTaskModal visible={isModalVisible} onClose={closeModal} />
       {isPeopleModalVisible && <PeopleModal onClose={hideModal} />}{" "}
+
+      </div>
 
     </div>
   );
