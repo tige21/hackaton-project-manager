@@ -62,3 +62,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsidXNlcnMiX
 {
 
 }
+
+### Update Competency User by ID
+
+PUT http://localhost:8080/integration/v1/users/c1cfe4b9-f7c2-423c-abfa-6ed1c05a15c5/competency
+Content-Type: application/json
+
+{
+  "type": "decrease",
+  "point": 50
+}

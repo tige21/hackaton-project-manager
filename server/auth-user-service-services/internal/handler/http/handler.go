@@ -12,11 +12,12 @@ import (
 )
 
 const (
-	metricPath = "/metrics"
-	healthPath = "/health"
-	publicV1   = "/public/v1"
-	privateV1  = "/private/v1"
-	authV1     = "/public/v1/auth"
+	metricPath    = "/metrics"
+	healthPath    = "/health"
+	publicV1      = "/public/v1"
+	privateV1     = "/private/v1"
+	integrationV1 = "/integration/v1"
+	authV1        = "/public/v1/auth"
 
 	livePath       = "/live"
 	readinessPath  = "/readiness"
@@ -69,10 +70,15 @@ func (h *Handler) InitRoutes() *chi.Mux {
 		r.Get("/users/{id}", appMiddleware(h.GetUserByID))
 		r.Delete("/users/{id}", appMiddleware(h.DeleteUserByID))
 		r.Patch("/users/{id}", appMiddleware(h.UpdateUserByID))
+		r.Put("/users/{id}/competency", appMiddleware(h.UpdateUserByID))
 	})
 
 	r.Route(privateV1, func(r chi.Router) {
 		r.Patch("/users/{id}", appMiddleware(h.PrivateUpdateUser))
+	})
+
+	r.Route(integrationV1, func(r chi.Router) {
+		r.Put("/users/{id}/competency", appMiddleware(h.UpdateCompetency))
 	})
 
 	return r

@@ -38,6 +38,12 @@ type UserUpdateBase struct {
 	Email   *string
 }
 
+// CompetencyUpdate - модель обновления компетенций
+type CompetencyUpdate struct {
+	Type  string
+	Point uint
+}
+
 // UserUpdate - модель обновления пользователя
 type UserUpdate struct {
 	UserUpdateBase

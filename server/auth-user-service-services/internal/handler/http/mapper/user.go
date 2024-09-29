@@ -25,6 +25,15 @@ func MapToEntityUserUpdate(user model.UserUpdate) entity.UserUpdate {
 	return u
 }
 
+// MapToEntityCompetencyUpdate - маппинг в модель редактирования компетенций
+func MapToEntityCompetencyUpdate(competency model.UpdateCompetency) entity.CompetencyUpdate {
+	c := entity.CompetencyUpdate{}
+	c.Point = competency.Point
+	c.Type = competency.Type
+
+	return c
+}
+
 // MapToEntityUserUpdatePrivate - маппинг в модель приватного редактирования пользователя
 func MapToEntityUserUpdatePrivate(user model.UserUpdatePrivate) entity.UserUpdatePrivate {
 
@@ -140,6 +149,16 @@ func MapToJWTResponse(code int, token, refreshToken string) response.ViewRespons
 		Result: model.JWT{
 			Token:        token,
 			RefreshToken: refreshToken,
+		},
+	}
+}
+
+// MapToCompetencyResponse - маппинг пользователя в модель ответ
+func MapToCompetencyResponse(code int, competencyLevel int) response.ViewResponse {
+	return response.ViewResponse{
+		Code: code,
+		Result: model.Competency{
+			CompetencyLevel: competencyLevel,
 		},
 	}
 }

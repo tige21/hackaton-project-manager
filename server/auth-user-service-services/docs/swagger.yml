@@ -374,6 +374,58 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /integration/v1/users/{id}/competency:
+    put:
+      security:
+        - bearerAuth: []
+      summary: редактирование компетенции
+      tags:
+        - Users Integration
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            example: c1cfe4b9-f7c2-423c-abfa-6ed1c05a15c5
+          description: идентификатор пользователя
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateCompetency"
+      responses:
+        "200":
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      result:
+                        $ref: "#/components/schemas/Competency"
+        "400":
+          description: Не получилось обработать данные
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Внутренняя проблема сервера
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
   /private/v1/users/{id}:
     patch:
       security:
@@ -547,6 +599,33 @@ components:
           type: string
           description: "пароль"
           example: "qwerty12345"
+          nullable: false
+
+    UpdateCompetency:
+      type: object
+      description: "модель изменения компетенций"
+      properties:
+        type:
+          type: string
+          description: "тип действия"
+          enum:
+            - increase
+            - decrease
+          nullable: false
+        point:
+          type: integer
+          description: "количество компетенции"
+          example: 15
+          nullable: false
+
+    Competency:
+      type: object
+      description: "модель уровня компетенций"
+      properties:
+        competencyLevel:
+          type: integer
+          description: "количество компетенции"
+          example: 45
           nullable: false
 
     UpdateUserRequest:

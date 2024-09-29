@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+	"github.com/GermanBogatov/user-service/internal/common/apperror"
+	"github.com/GermanBogatov/user-service/internal/config"
 	"github.com/GermanBogatov/user-service/internal/entity"
 	"github.com/GermanBogatov/user-service/internal/repository/postgres"
 )
@@ -16,6 +18,7 @@ type IUser interface {
 	DeleteUserByID(ctx context.Context, id string) error
 	UpdateUserByID(ctx context.Context, userUpdate entity.UserUpdate) (entity.User, error)
 	UpdatePrivateUserByID(ctx context.Context, userUpdate entity.UserUpdatePrivate) (entity.User, error)
+	UpdateCompetencyByUserID(ctx context.Context, userID string, competencyUpdate entity.CompetencyUpdate) (int, error)
 }
 
 type User struct {
@@ -76,4 +79,30 @@ func (u *User) GetUsers(ctx context.Context, filter entity.Filter) ([]entity.Use
 // UpdatePrivateUserByID - приватное обновление пользователя
 func (u *User) UpdatePrivateUserByID(ctx context.Context, userUpdate entity.UserUpdatePrivate) (entity.User, error) {
 	return u.userRepo.UpdatePrivateUserByID(ctx, userUpdate)
+}
+
+// UpdateCompetencyByUserID - обновление компетенций
+func (u *User) UpdateCompetencyByUserID(ctx context.Context, userID string, competencyUpdate entity.CompetencyUpdate) (int, error) {
+	actualCompetencyLevel, err := u.userRepo.GetCompetencyLevelByUserID(ctx, userID)
+	if err != nil {
+		return 0, err
+	}
+
+	competencyLevel := 0
+	switch competencyUpdate.Type {
+	case config.CompetencyDecrease:
+		competencyLevel = actualCompetencyLevel - int(competencyUpdate.Point)
+		if competencyLevel < 0 {
+			return 0, apperror.ErrCompetencyPointIsLessThenLowLimit
+		}
+	case config.CompetencyIncrease:
+		competencyLevel = actualCompetencyLevel + int(competencyUpdate.Point)
+		if competencyLevel > 100 {
+			return 0, apperror.ErrCompetencyPointIsHigherThenMaxLimit
+		}
+	default:
+		return 0, apperror.ErrInvalidCompetencyType
+	}
+
+	return u.userRepo.UpdateCompetencyLevelByUserID(ctx, userID, competencyLevel)
 }

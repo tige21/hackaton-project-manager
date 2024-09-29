@@ -60,6 +60,23 @@ func ValidateUserUpdate(user model.UserUpdate) error {
 	return nil
 }
 
+// ValidateCompetencyUpdate - валидация компетенций при редактировании
+func ValidateCompetencyUpdate(competency model.UpdateCompetency) error {
+	if competency.Type != config.CompetencyIncrease && competency.Type != config.CompetencyDecrease {
+		return apperror.ErrInvalidCompetencyType
+	}
+
+	if competency.Point <= 0 {
+		return apperror.ErrCompetencyPointIsLess
+	}
+
+	if competency.Point > 100 {
+		return apperror.ErrCompetencyPointIsMore
+	}
+
+	return nil
+}
+
 // ValidateUserUpdatePrivate - валидация пользователя при приватном редактировании
 func ValidateUserUpdatePrivate(user model.UserUpdatePrivate) error {
 	if user.Name == nil && user.Surname == nil && user.Email == nil && user.Role == nil {

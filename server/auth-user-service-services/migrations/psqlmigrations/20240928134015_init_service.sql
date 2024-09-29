@@ -13,14 +13,16 @@ CREATE TYPE roleType AS ENUM (
     );
 
 CREATE TABLE users (
-    id            UUID NOT NULL PRIMARY KEY,
-    name          VARCHAR(255) NOT NULL,
-    surname       VARCHAR(255) NOT NULL,
-    email         VARCHAR(255) UNIQUE NOT NULL,
-    password      VARCHAR(255) NOT NULL,
-    role          roleType NOT NULL,
-    created_date  TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-    updated_date  TIMESTAMP WITHOUT TIME ZONE DEFAULT NULL
+    id                  UUID NOT NULL PRIMARY KEY,
+    name                VARCHAR(255) NOT NULL,
+    surname             VARCHAR(255) NOT NULL,
+    email               VARCHAR(255) UNIQUE NOT NULL,
+    password            VARCHAR(255) NOT NULL,
+    role                roleType NOT NULL,
+    competency_level    INTEGER CHECK (competency_level >= 0 AND competency_level <= 100),
+    working_hours_left  INTEGER CHECK (working_hours_left >= 0),
+    created_date        TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    updated_date        TIMESTAMP WITHOUT TIME ZONE DEFAULT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_users_email_password

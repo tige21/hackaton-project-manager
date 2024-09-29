@@ -55,3 +55,12 @@ type JWT struct {
 	Token        string `json:"token"`
 	RefreshToken string `json:"refreshToken"`
 }
+
+type UpdateCompetency struct {
+	Type  string `json:"type"`
+	Point uint   `json:"point"`
+}
+
+type Competency struct {
+	CompetencyLevel int `json:"competencyLevel"`
+}
