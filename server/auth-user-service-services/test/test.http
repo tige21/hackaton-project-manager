@@ -6,7 +6,7 @@ Content-Type: application/json
 {
   "name": "German",
   "surname": "Bogatov",
-  "email": "bogatovg@mail.ru",
+  "email": "bogatovgea@mail.ru",
   "password": "23Bogatov"
 }
 
@@ -26,14 +26,14 @@ Content-Type: application/json
 
 
 ### Get User By ID
-GET http://localhost:8080/public/v1/users/633d8ac3-c938-4c04-89f2-279e08add07c
+GET http://localhost:8080/public/v1/users/713197b2-1d4d-4482-8dd3-3fff12e58a32
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTcyNzU0OTQ3NiwianRpIjoiYTEzZjA0ODQtZGU0Yi00MDdhLWI5NGQtMWUyMTk0YzQ4MTE3IiwiZW1haWwiOiJib2dhdG92Z3JtbkBtYWlsLnJ1Iiwicm9sZSI6ImRldmVsb3BlciJ9.6xGDsVPvkSKt_Ckc7pLxwFMSF8EfTh1TnBW3JEu-58s
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsidXNlcnMiXSwiZXhwIjoxNzI3NTc0OTI1LCJqdGkiOiI3MTMxOTdiMi0xZDRkLTQ0ODItOGRkMy0zZmZmMTJlNThhMzIiLCJlbWFpbCI6ImJvZ2F0b3ZnZWFAbWFpbC5ydSIsInJvbGUiOiJkZXZlbG9wZXIifQ.QLS_U5Q_O1v0n0Ob9_3DRy1dmZVdQ7-r5VZH0hkmrMc
 
 ### Get Users with filters
 GET http://localhost:8080/public/v1/users?sort=asc&order=surname&offset=0&limit=20
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsidXNlcnMiXSwiZXhwIjoxNzI3NTY5NDMzLCJqdGkiOiJhMTNmMDQ4NC1kZTRiLTQwN2EtYjk0ZC0xZTIxOTRjNDgxMTciLCJlbWFpbCI6ImJvZ2F0b3Zncm1uQG1haWwucnUiLCJyb2xlIjoiZGV2ZWxvcGVyIn0.fhtM6ELIe7v_VfvNS4W16tTrVjq04gVSQf9vKIw0ChQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsidXNlcnMiXSwiZXhwIjoxNzI3NTc0OTI1LCJqdGkiOiI3MTMxOTdiMi0xZDRkLTQ0ODItOGRkMy0zZmZmMTJlNThhMzIiLCJlbWFpbCI6ImJvZ2F0b3ZnZWFAbWFpbC5ydSIsInJvbGUiOiJkZXZlbG9wZXIifQ.QLS_U5Q_O1v0n0Ob9_3DRy1dmZVdQ7-r5VZH0hkmrMc
 
 
 ### Delete User By ID
@@ -43,9 +43,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsI
 
 ### Update User by ID
 
-PATCH http://localhost:8080/public/v1/users/bf56de11-b23d-4823-a148-732d8fc2bafc
+PATCH http://localhost:8080/public/v1/users/713197b2-1d4d-4482-8dd3-3fff12e58a32
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTcyNzU1OTU1NiwianRpIjoiYmY1NmRlMTEtYjIzZC00ODIzLWExNDgtNzMyZDhmYzJiYWZjIiwiZW1haWwiOiJib2dhdG92Z0BtYWlsLnJ1Iiwicm9sZSI6ImRldmVsb3BlciJ9.QMY9f4uk34ay4gKEpBM9fTnQmGt1lOUDjl5kaX3RAqY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsidXNlcnMiXSwiZXhwIjoxNzI3NTc0OTI1LCJqdGkiOiI3MTMxOTdiMi0xZDRkLTQ0ODItOGRkMy0zZmZmMTJlNThhMzIiLCJlbWFpbCI6ImJvZ2F0b3ZnZWFAbWFpbC5ydSIsInJvbGUiOiJkZXZlbG9wZXIifQ.QLS_U5Q_O1v0n0Ob9_3DRy1dmZVdQ7-r5VZH0hkmrMc
 
 {
   "name": "German",

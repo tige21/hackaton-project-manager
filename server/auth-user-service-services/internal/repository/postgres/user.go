@@ -137,6 +137,13 @@ func (u *User) UpdateUserByID(ctx context.Context, userUpdate entity.UserUpdate)
 	err := u.client.QueryRow(ctx, query, args...).Scan(&user.ID, &user.Name, &user.Surname, &user.Email, &user.Password, &user.Role, &user.CreatedDate, &user.UpdatedDate)
 	if err != nil {
 		metrics.IncRequestTotalDB(metrics.UpdateUserByIDDb, metrics.FailStatus)
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) {
+			if pgErr.Code == pgerrcode.UniqueViolation {
+				return entity.User{}, apperror.ErrUserIsExistWithEmail
+			}
+			return entity.User{}, err
+		}
 		return entity.User{}, err
 	}
 
@@ -181,12 +188,21 @@ func prepareQueryUpdate(user entity.UserUpdate) (string, []interface{}) {
 // GetUsers - получение пользователей
 func (u *User) GetUsers(ctx context.Context, filter entity.Filter) ([]entity.User, error) {
 	defer metrics.ObserveRequestDurationPerMethodDB(metrics.Postgres, metrics.GetUsersDb)()
-
-	q := fmt.Sprintf(`
+	var q string
+	if filter.Role == nil {
+		q = fmt.Sprintf(`
 			SELECT id,name,surname,email,password,role,created_date,updated_date
 			FROM users
 			ORDER BY %s %s
 			OFFSET %v LIMIT %v;`, filter.Order, filter.Sort, filter.Offset, filter.Limit)
+	} else {
+		q = fmt.Sprintf(`
+			SELECT id,name,surname,email,password,role,created_date,updated_date
+			FROM users
+			WHERE role = '%s'
+			ORDER BY %s %s
+			OFFSET %v LIMIT %v;`, *filter.Role, filter.Order, filter.Sort, filter.Offset, filter.Limit)
+	}
 
 	rows, err := u.client.Query(ctx, q)
 	if err != nil {
@@ -219,6 +235,13 @@ func (u *User) UpdatePrivateUserByID(ctx context.Context, userUpdate entity.User
 	err := u.client.QueryRow(ctx, query, args...).Scan(&user.ID, &user.Name, &user.Surname, &user.Email, &user.Password, &user.Role, &user.CreatedDate, &user.UpdatedDate)
 	if err != nil {
 		metrics.IncRequestTotalDB(metrics.UpdateUserByIDDb, metrics.FailStatus)
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) {
+			if pgErr.Code == pgerrcode.UniqueViolation {
+				return entity.User{}, apperror.ErrUserIsExistWithEmail
+			}
+			return entity.User{}, err
+		}
 		return entity.User{}, err
 	}
 

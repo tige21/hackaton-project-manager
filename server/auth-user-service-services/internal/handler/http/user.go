@@ -26,6 +26,7 @@ func (h *Handler) GetUsers(w http.ResponseWriter, r *http.Request) error {
 
 	sort := helpers.GetStringWithDefaultFromQuery(r, config.ParamSort, config.SortDesc)
 	order := helpers.GetStringWithDefaultFromQuery(r, config.ParamOrder, config.OrderCreatedDate)
+	role := helpers.GetOptionalParamFromQuery(r, config.ParamRole)
 
 	err = validator.ValidateSort(sort)
 	if err != nil {
@@ -37,7 +38,12 @@ func (h *Handler) GetUsers(w http.ResponseWriter, r *http.Request) error {
 		return apperror.BadRequestError(err)
 	}
 
-	filter := mapper.MapToEntityFilter(limit, offset, sort, order)
+	err = validator.ValidateRole(role)
+	if err != nil {
+		return apperror.BadRequestError(err)
+	}
+
+	filter := mapper.MapToEntityFilter(limit, offset, sort, order, role)
 	users, err := h.userService.GetUsers(ctx, filter)
 	if err != nil {
 		return apperror.InternalServerError(err)

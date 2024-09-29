@@ -282,6 +282,22 @@ const docTemplate = `
         "parameters": [
           {
             "in": "query",
+            "name": "role",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "developer",
+                "admin",
+                "backend",
+                "frontend",
+                "designer",
+                "devops",
+                "project-manager"
+              ]
+            }
+          },
+          {
+            "in": "query",
             "name": "sort",
             "schema": {
               "type": "string",
@@ -1037,6 +1053,12 @@ const docTemplate = `
             "example": "bogatovgrmn@gmail.com",
             "nullable": false
           },
+          "role": {
+            "type": "string",
+            "description": "роль пользователя",
+            "example": "developer",
+            "nullable": false
+          },
           "createdDate": {
             "type": "string",
             "description": "дата создания пользователя",
@@ -1077,6 +1099,12 @@ const docTemplate = `
             "type": "string",
             "description": "электронная почта",
             "example": "bogatovgrmn@gmail.com",
+            "nullable": false
+          },
+          "role": {
+            "type": "string",
+            "description": "роль пользователя",
+            "example": "developer",
             "nullable": false
           },
           "createdDate": {

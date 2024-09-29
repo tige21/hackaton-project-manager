@@ -4,7 +4,12 @@
 CREATE TYPE roleType AS ENUM (
     'developer',
     'super-admin',
-    'admin'
+    'admin',
+    'backend',
+    'frontend',
+    'designer',
+    'devops',
+    'project-manager'
     );
 
 CREATE TABLE users (

@@ -166,6 +166,18 @@ paths:
         - Users
       parameters:
         - in: query
+          name: role
+          schema:
+            type: string
+            enum:
+              - developer
+              - admin
+              - backend
+              - frontend
+              - designer
+              - devops
+              - project-manager
+        - in: query
           name: sort
           schema:
             type: string
@@ -684,6 +696,11 @@ components:
           description: "электронная почта"
           example: "bogatovgrmn@gmail.com"
           nullable: false
+        role:
+          type: string
+          description: "роль пользователя"
+          example: "developer"
+          nullable: false
         createdDate:
           type: string
           description: "дата создания пользователя"
@@ -719,6 +736,11 @@ components:
           description: "электронная почта"
           example: "bogatovgrmn@gmail.com"
           nullable: false
+        role:
+          type: string
+          description: "роль пользователя"
+          example: "developer"
+          nullable: false
         createdDate:
           type: string
           description: "дата создания пользователя"
@@ -744,22 +766,6 @@ components:
               description: "идентификатор пользователя"
               example: "909c6a00-76f1-491f-9b07-982705c6d68b"
               nullable: false
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

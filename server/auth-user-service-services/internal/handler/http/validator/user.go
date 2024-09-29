@@ -62,7 +62,10 @@ func ValidateUserUpdatePrivate(user model.UserUpdatePrivate) error {
 	}
 
 	if user.Role != nil {
-		if entity.RoleType(*user.Role) != entity.RoleAdmin && entity.RoleType(*user.Role) != entity.RoleDeveloper {
+		if entity.RoleType(*user.Role) != entity.RoleAdmin && entity.RoleType(*user.Role) != entity.RoleDeveloper &&
+			entity.RoleType(*user.Role) != entity.RoleBackend && entity.RoleType(*user.Role) != entity.RoleFrontend &&
+			entity.RoleType(*user.Role) != entity.RoleDesigner && entity.RoleType(*user.Role) != entity.RoleDevops &&
+			entity.RoleType(*user.Role) != entity.RoleProjectManager {
 			return apperror.ErrInvalidRoleType
 		}
 	}
@@ -110,7 +113,7 @@ func ValidateSort(sort string) error {
 	case config.SortAsc, config.SortDesc:
 		return nil
 	default:
-		return apperror.ErrInvalidSort
+		return apperror.ErrInvalidParamSort
 	}
 }
 
@@ -120,6 +123,20 @@ func ValidateOrder(order string) error {
 	case config.OrderEmail, config.OrderName, config.OrderSurname, config.OrderCreatedDate:
 		return nil
 	default:
-		return apperror.ErrInvalidOrder
+		return apperror.ErrInvalidParamOrder
+	}
+}
+
+// ValidateRole - валидация роли
+func ValidateRole(role *string) error {
+	if role == nil {
+		return nil
+	}
+
+	switch *role {
+	case string(entity.RoleDeveloper), string(entity.RoleAdmin), string(entity.RoleBackend), string(entity.RoleFrontend), string(entity.RoleDesigner), string(entity.RoleDevops), string(entity.RoleProjectManager):
+		return nil
+	default:
+		return apperror.ErrInvalidParamRole
 	}
 }
