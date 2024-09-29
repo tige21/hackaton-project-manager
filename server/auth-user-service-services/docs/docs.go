@@ -902,6 +902,12 @@ const docTemplate = `
             "description": "электронная почта",
             "example": "bogatovgrmn@gmail.com",
             "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "description": "пароль",
+            "example": "newqwerty12345",
+            "nullable": true
           }
         }
       },

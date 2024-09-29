@@ -30,17 +30,23 @@ type User struct {
 	UpdatedDate *time.Time
 }
 
-// UserUpdate - модель обновления пользователя
-type UserUpdate struct {
+// UserUpdateBase - базовая модель пользователя для редактирования
+type UserUpdateBase struct {
 	ID      string
 	Name    *string
 	Surname *string
 	Email   *string
 }
 
+// UserUpdate - модель обновления пользователя
+type UserUpdate struct {
+	UserUpdateBase
+	Password *string
+}
+
 // UserUpdatePrivate - модель приватного обновления пользователя
 type UserUpdatePrivate struct {
-	UserUpdate
+	UserUpdateBase
 	Role *RoleType
 }
 

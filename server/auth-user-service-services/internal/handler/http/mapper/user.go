@@ -18,20 +18,20 @@ func MapToEntityUser(user model.SignUpRequest) entity.User {
 
 // MapToEntityUserUpdate - маппинг в модель редактирования пользователя
 func MapToEntityUserUpdate(user model.UserUpdate) entity.UserUpdate {
-	return entity.UserUpdate{
-		Name:    user.Name,
-		Surname: user.Surname,
-		Email:   user.Email,
-	}
+	u := entity.UserUpdate{}
+	u.Name = user.Name
+	u.Surname = user.Surname
+	u.Email = user.Email
+	return u
 }
 
 // MapToEntityUserUpdatePrivate - маппинг в модель приватного редактирования пользователя
 func MapToEntityUserUpdatePrivate(user model.UserUpdatePrivate) entity.UserUpdatePrivate {
 
 	u := entity.UserUpdatePrivate{}
-	u.UserUpdate.Name = user.Name
-	u.UserUpdate.Surname = user.Surname
-	u.UserUpdate.Email = user.Email
+	u.Name = user.Name
+	u.Surname = user.Surname
+	u.Email = user.Email
 
 	if user.Role != nil {
 		role := entity.RoleType(*user.Role)

@@ -6,7 +6,7 @@ Content-Type: application/json
 {
   "name": "German",
   "surname": "Bogatov",
-  "email": "bogatovgea@mail.ru",
+  "email": "bogat1weee@mail.ru",
   "password": "23Bogatov"
 }
 
@@ -16,7 +16,7 @@ POST http://localhost:8080/public/v1/auth/sign-in
 Content-Type: application/json
 
 {
-  "email": "bogatovgrmn@gmail.com",
+  "email": "bogat1weee@mail.ru",
   "password": "qwerty12345"
 }
 
@@ -43,14 +43,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsI
 
 ### Update User by ID
 
-PATCH http://localhost:8080/public/v1/users/713197b2-1d4d-4482-8dd3-3fff12e58a32
+PATCH http://localhost:8080/public/v1/users/5127d211-cd89-45fb-afdf-86c025eea1eb
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsidXNlcnMiXSwiZXhwIjoxNzI3NTc0OTI1LCJqdGkiOiI3MTMxOTdiMi0xZDRkLTQ0ODItOGRkMy0zZmZmMTJlNThhMzIiLCJlbWFpbCI6ImJvZ2F0b3ZnZWFAbWFpbC5ydSIsInJvbGUiOiJkZXZlbG9wZXIifQ.QLS_U5Q_O1v0n0Ob9_3DRy1dmZVdQ7-r5VZH0hkmrMc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsidXNlcnMiXSwiZXhwIjoxNzI3NTk2NDQ2LCJqdGkiOiI1MTI3ZDIxMS1jZDg5LTQ1ZmItYWZkZi04NmMwMjVlZWExZWIiLCJlbWFpbCI6ImJvZ2F0MXdlZWVAbWFpbC5ydSIsInJvbGUiOiJkZXZlbG9wZXIifQ.9gpjuGAjLP3n1cj6DPPg8GNa-bi25AUR0EAiNWrsGq4
 
 {
   "name": "German",
   "surname": "Bogatov",
-  "email": "bogatovg@mail.ru"
+  "password": "qwerty12345"
 }
 
 ### Update Private User by ID
