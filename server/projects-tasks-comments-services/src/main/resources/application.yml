@@ -9,7 +9,8 @@ spring:
     username: ${SPRING_DATASOURCE_USERNAME:amogus}
     password: ${SPRING_DATASOURCE_PASSWORD:amogus}
     driver-class-name: org.postgresql.Driver
-
+  security:
+    enabled: false
   jpa:
     hibernate:
       ddl-auto: none
