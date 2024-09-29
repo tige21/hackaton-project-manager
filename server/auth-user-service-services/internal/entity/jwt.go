@@ -1,9 +1,9 @@
 package entity
 
-import "github.com/golang-jwt/jwt/v4"
+import "github.com/golang-jwt/jwt/v5"
 
 type UserClaims struct {
-	jwt.StandardClaims
-	Email string   `json:"email"`
-	Roles []string `json:"roles"`
+	jwt.RegisteredClaims
+	Email string `json:"email"`
+	Role  string `json:"role"`
 }

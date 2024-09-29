@@ -9,13 +9,22 @@ var (
 )
 
 const (
-	RoleDeveloper = "developer"
-	RoleAdmin     = "admin"
-
-	JWTTokenSalt  = "sad342mslfd23412sdfsdf1234hgf"
-	JWTSecret     = "$3cr3t"
+	PasswordSalt  = "sad342mslfd23412sdfsdf1234hgf"
+	JWTSecret     = "4FC82B26AECB47D2868C4EFBE3581732A3E7CBCC6C2EFB32062C08170A05EEB8"
 	IsoTimeLayout = "2006-01-02T15:04:05Z" // Формат ISO 8601
 
-	ParamID    = "id"
-	ParamRoles = "roles"
+	ParamID     = "id"
+	ParamRole   = "role"
+	ParamOffset = "offset"
+	ParamLimit  = "limit"
+	ParamSort   = "sort"
+	ParamOrder  = "order"
+
+	OrderName          = "name"
+	OrderSurname       = "surname"
+	OrderEmail         = "email"
+	OrderCreatedDate   = "createdDate"
+	OrderCreatedDateDB = "created_date"
+	SortDesc           = "desc"
+	SortAsc            = "asc"
 )

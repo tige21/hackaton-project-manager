@@ -8,6 +8,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"net/http"
+	"strconv"
+	"strings"
 )
 
 // GetUuidFromPath - получение uuid-значения из пути запроса
@@ -41,7 +43,7 @@ func GetStringFromPath(r *http.Request, key string) (string, error) {
 // GetStringWithDefaultFromQuery - получение строкового значения из query. Если его нет, то заменять дефолтным
 func GetStringWithDefaultFromQuery(r *http.Request, key, defaultParam string) string {
 	param := r.URL.Query().Get(key)
-	if len(param) == 0 {
+	if strings.TrimSpace(param) == "" {
 		return defaultParam
 	}
 
@@ -51,16 +53,44 @@ func GetStringWithDefaultFromQuery(r *http.Request, key, defaultParam string) st
 // GetOptionalParamFromQuery - получение значения из query, либо nil при его отсутствии
 func GetOptionalParamFromQuery(r *http.Request, key string) *string {
 	param := r.URL.Query().Get(key)
-	if len(param) == 0 {
+	if strings.TrimSpace(param) == "" {
 		return nil
 	}
 
 	return &param
 }
 
+// GetLimitAndOffset - получение лимита и офсета из query (если нет параметров, то дополнение дефолтными)
+func GetLimitAndOffset(r *http.Request, keyOffset, keyLimit string) (int, int, error) {
+	var limit, offset int
+	var err error
+
+	limitParam := r.URL.Query().Get(keyLimit)
+	if len(limitParam) == 0 {
+		limit = 20
+	} else {
+		limit, err = strconv.Atoi(limitParam)
+		if err != nil {
+			return 0, 0, errors.Wrap(err, "invalid limit param")
+		}
+	}
+
+	offsetParam := r.URL.Query().Get(keyOffset)
+	if len(offsetParam) == 0 {
+		offset = 0
+	} else {
+		offset, err = strconv.Atoi(offsetParam)
+		if err != nil {
+			return 0, 0, errors.Wrap(err, "invalid offset param")
+		}
+	}
+
+	return offset, limit, nil
+}
+
 func GeneratePasswordHash(password string) string {
 	hash := sha256.New()
 	hash.Write([]byte(password))
 
-	return fmt.Sprintf("%x", hash.Sum([]byte(config.JWTTokenSalt)))
+	return fmt.Sprintf("%x", hash.Sum([]byte(config.PasswordSalt)))
 }

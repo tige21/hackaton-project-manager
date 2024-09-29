@@ -14,6 +14,7 @@ const (
 	metricPath = "/metrics"
 	healthPath = "/health"
 	publicV1   = "/public/v1"
+	privateV1  = "/private/v1"
 	authV1     = "/public/v1/auth"
 
 	livePath       = "/live"
@@ -54,7 +55,14 @@ func (h *Handler) InitRoutes() *chi.Mux {
 		r.Get("/refresh/{id}", appMiddleware(h.UpdateRefreshToken))
 	})
 	r.Route(publicV1, func(r chi.Router) {
-		r.Post("/users/{id}", appMiddleware(h.GetUserByID))
+		r.Get("/users", appMiddleware(h.GetUsers))
+		r.Get("/users/{id}", appMiddleware(h.GetUserByID))
+		r.Delete("/users/{id}", appMiddleware(h.DeleteUserByID))
+		r.Patch("/users/{id}", appMiddleware(h.UpdateUserByID))
+	})
+
+	r.Route(privateV1, func(r chi.Router) {
+		r.Patch("/users/{id}", appMiddleware(h.PrivateUpdateUser))
 	})
 
 	return r

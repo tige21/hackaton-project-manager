@@ -11,6 +11,7 @@ import CreateProjectPage from "./modules/Projects/screens/ProjectsPage";
 import DashboardPage from "./modules/Dashboard/screens/DashboardPage";
 import ProjectsPage from "./modules/Projects/screens/ProjectsPage";
 import Layout from "./components/Layout/Layout";
+import TasksPage from "./modules/Tasks/screens/TasksPage";
 // import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
 const App: React.FC = () => {
@@ -27,6 +28,8 @@ const App: React.FC = () => {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/create-project" element={<CreateProjectPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/tasks" element={<TasksPage />} />
+
         <Route path="/projects" element={<ProjectsPage />} />
         {/* Защищённые маршруты */}
         {/* Добавляем маршрут */}

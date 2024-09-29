@@ -1,0 +1,54 @@
+.taskPage {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    color: white;
+    height: 100vh;
+  }
+  .container{
+    flex: 1;
+    width: 100%;
+    padding: 40px;
+    flex-direction: column;
+    align-items: center;
+}
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .actions {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .sortSelect {
+    background-color: #1f2a35;
+    color: white;
+    border-radius: 5px;
+  }
+  
+  .taskTable {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .tableHeader {
+    display: grid;
+    grid-template-columns: 1fr 2fr 2fr 1fr 0.5fr 1fr 2fr;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #1f2a45;
+    border-radius: 10px;
+    font-weight: bold;
+    color: #ffffff;
+  }
+  
+  .taskList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  

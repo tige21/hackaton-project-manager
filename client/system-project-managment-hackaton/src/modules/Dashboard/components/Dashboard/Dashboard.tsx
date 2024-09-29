@@ -382,11 +382,13 @@ export function Dashboard({
     >
       <div
         style={{
+    
           display: "inline-grid",
           boxSizing: "border-box",
           padding: 20,
           gridAutoFlow: vertical ? "row" : "column",
           overflowX: "auto",
+          width: "100%",
         }}
       >
         <SortableContext

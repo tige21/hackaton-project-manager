@@ -95,23 +95,6 @@ func (h *Handler) SignIn(w http.ResponseWriter, r *http.Request) error {
 	return response.RespondSuccess(w, mapper.MapToUserWithJWTResponse(http.StatusOK, user))
 }
 
-// GetUserByID - хэндлер получения пользователя по идентификатору
-func (h *Handler) GetUserByID(w http.ResponseWriter, r *http.Request) error {
-	ctx := r.Context()
-
-	userID, err := helpers.GetUuidFromPath(r, config.ParamID)
-	if err != nil {
-		return apperror.BadRequestError(errors.Wrap(err, "get uuid from header"))
-	}
-
-	user, err := h.userService.GetUserByID(ctx, userID.String())
-	if err != nil {
-		return apperror.InternalServerError(err)
-	}
-
-	return response.RespondSuccess(w, mapper.MapToUserResponse(http.StatusOK, user))
-}
-
 // UpdateRefreshToken - хэндлер обновления jwt-токена
 func (h *Handler) UpdateRefreshToken(w http.ResponseWriter, r *http.Request) error {
 	ctx := r.Context()

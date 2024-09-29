@@ -282,6 +282,22 @@ const docTemplate = `
         "parameters": [
           {
             "in": "query",
+            "name": "role",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "developer",
+                "admin",
+                "backend",
+                "frontend",
+                "designer",
+                "devops",
+                "project-manager"
+              ]
+            }
+          },
+          {
+            "in": "query",
             "name": "sort",
             "schema": {
               "type": "string",
@@ -461,7 +477,7 @@ const docTemplate = `
           }
         }
       },
-      "put": {
+      "patch": {
         "security": [
           {
             "bearerAuth": []
@@ -579,6 +595,95 @@ const docTemplate = `
                   "allOf": [
                     {
                       "$ref": "#/components/schemas/SuccessResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Не получилось обработать данные",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя проблема сервера",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/private/v1/users/{id}": {
+      "patch": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "редактирование пользователя (доступно только админам)",
+        "tags": [
+          "Users Private"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string",
+              "example": "c1cfe4b9-f7c2-423c-abfa-6ed1c05a15c5"
+            },
+            "description": "идентификатор пользователя",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePrivateUserRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Успешный ответ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "result": {
+                          "$ref": "#/components/schemas/UserPrivateWithoutJWT"
+                        }
+                      }
                     }
                   ]
                 }
@@ -784,19 +889,52 @@ const docTemplate = `
             "type": "string",
             "description": "имя",
             "example": "German",
-            "nullable": false
+            "nullable": true
           },
           "surname": {
             "type": "string",
             "description": "фамилия",
             "example": "Bogatov",
-            "nullable": false
+            "nullable": true
           },
           "email": {
             "type": "string",
             "description": "электронная почта",
             "example": "bogatovgrmn@gmail.com",
-            "nullable": false
+            "nullable": true
+          }
+        }
+      },
+      "UpdatePrivateUserRequest": {
+        "type": "object",
+        "description": "модель обновления пользователя",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "имя",
+            "example": "German",
+            "nullable": true
+          },
+          "surname": {
+            "type": "string",
+            "description": "фамилия",
+            "example": "Bogatov",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "description": "электронная почта",
+            "example": "bogatovgrmn@gmail.com",
+            "nullable": true
+          },
+          "role": {
+            "type": "string",
+            "description": "роль",
+            "enum": [
+              "developer",
+              "admin"
+            ],
+            "nullable": true
           }
         }
       },
@@ -807,7 +945,7 @@ const docTemplate = `
           "token": {
             "type": "string",
             "description": "идентификатор пользователя",
-            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTcyNzU0MjU0NSwianRpIjoiY2NjZDVjMzctMWU3ZS00ODcyLTk4YWUtMzk3NThlMmM0YzZjIiwiZW1haWwiOiJib2dhdG92Z3JtbkBtYWlsLnJ1Iiwicm9sZXMiOlsiZGV2ZWxvcGVyIl19.coCpKjxOS09ksUpKFRK_ZXQolTiNF5ph7p3s5zYEbVE",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTcyNzU0OTUxOSwianRpIjoiYTEzZjA0ODQtZGU0Yi00MDdhLWI5NGQtMWUyMTk0YzQ4MTE3IiwiZW1haWwiOiJib2dhdG92Z3JtbkBtYWlsLnJ1Iiwicm9sZSI6ImRldmVsb3BlciJ9.pFJSZwFe0zpnmRuMQp7S4OvOknh1mTyuhfj6z0f4Afw",
             "nullable": false
           },
           "refreshToken": {
@@ -833,6 +971,57 @@ const docTemplate = `
             "items": {
               "$ref": "#/components/schemas/UserWithoutJWT"
             }
+          }
+        }
+      },
+      "UserPrivateWithoutJWT": {
+        "type": "object",
+        "description": "модель пользователя без jwt",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "идентификатор пользователя",
+            "example": "c1cfe4b9-f7c2-423c-abfa-6ed1c05a15c5",
+            "nullable": false
+          },
+          "name": {
+            "type": "string",
+            "description": "имя",
+            "example": "German",
+            "nullable": false
+          },
+          "surname": {
+            "type": "string",
+            "description": "фамилия",
+            "example": "Bogatov",
+            "nullable": false
+          },
+          "email": {
+            "type": "string",
+            "description": "электронная почта",
+            "example": "bogatovgrmn@gmail.com",
+            "nullable": false
+          },
+          "role": {
+            "type": "string",
+            "description": "роль",
+            "enum": [
+              "developer",
+              "admin"
+            ],
+            "nullable": false
+          },
+          "createdDate": {
+            "type": "string",
+            "description": "дата создания пользователя",
+            "example": "2024-05-22T13:03:25Z",
+            "nullable": false
+          },
+          "updatedDate": {
+            "type": "string",
+            "description": "дата изменения пользователя",
+            "example": "2024-05-22T13:03:25Z",
+            "nullable": true
           }
         }
       },
@@ -864,6 +1053,12 @@ const docTemplate = `
             "example": "bogatovgrmn@gmail.com",
             "nullable": false
           },
+          "role": {
+            "type": "string",
+            "description": "роль пользователя",
+            "example": "developer",
+            "nullable": false
+          },
           "createdDate": {
             "type": "string",
             "description": "дата создания пользователя",
@@ -874,7 +1069,7 @@ const docTemplate = `
             "type": "string",
             "description": "дата изменения пользователя",
             "example": "2024-05-22T13:03:25Z",
-            "nullable": false
+            "nullable": true
           }
         }
       },
@@ -906,6 +1101,12 @@ const docTemplate = `
             "example": "bogatovgrmn@gmail.com",
             "nullable": false
           },
+          "role": {
+            "type": "string",
+            "description": "роль пользователя",
+            "example": "developer",
+            "nullable": false
+          },
           "createdDate": {
             "type": "string",
             "description": "дата создания пользователя",
@@ -926,7 +1127,7 @@ const docTemplate = `
               "token": {
                 "type": "string",
                 "description": "идентификатор пользователя",
-                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTcyNzU0MjU0NSwianRpIjoiY2NjZDVjMzctMWU3ZS00ODcyLTk4YWUtMzk3NThlMmM0YzZjIiwiZW1haWwiOiJib2dhdG92Z3JtbkBtYWlsLnJ1Iiwicm9sZXMiOlsiZGV2ZWxvcGVyIl19.coCpKjxOS09ksUpKFRK_ZXQolTiNF5ph7p3s5zYEbVE",
+                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTcyNzU0OTUxOSwianRpIjoiYTEzZjA0ODQtZGU0Yi00MDdhLWI5NGQtMWUyMTk0YzQ4MTE3IiwiZW1haWwiOiJib2dhdG92Z3JtbkBtYWlsLnJ1Iiwicm9sZSI6ImRldmVsb3BlciJ9.pFJSZwFe0zpnmRuMQp7S4OvOknh1mTyuhfj6z0f4Afw",
                 "nullable": false
               },
               "refreshToken": {

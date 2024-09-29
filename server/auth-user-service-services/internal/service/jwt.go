@@ -8,7 +8,7 @@ import (
 	"github.com/GermanBogatov/user-service/internal/repository/postgres"
 	"github.com/GermanBogatov/user-service/pkg/logging"
 	"github.com/go-redis/redis/v8"
-	"github.com/golang-jwt/jwt/v4"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"time"
@@ -80,14 +80,14 @@ func (j *JWT) UpdateRefreshToken(ctx context.Context, refreshToken string) (stri
 func (j *JWT) GenerateAccessToken(user entity.User) (string, string, error) {
 	key := []byte(j.secret)
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &entity.UserClaims{
-		StandardClaims: jwt.StandardClaims{
-			Id:        user.ID,
-			Audience:  "users",
-			ExpiresAt: time.Now().Add(j.jwtTTL).Unix(),
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, entity.UserClaims{
+		RegisteredClaims: jwt.RegisteredClaims{
+			ID:        user.ID,
+			Audience:  jwt.ClaimStrings{"users"},
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(j.jwtTTL)),
 		},
 		Email: user.Email,
-		Roles: user.Roles,
+		Role:  string(user.Role),
 	})
 
 	accessToken, err := token.SignedString(key)

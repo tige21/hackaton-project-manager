@@ -17,8 +17,7 @@ const RegisterScreen = () => {
         <div className={styles.container}>
           <div className={styles.welcomeSection}>
             <h2 className={styles.welcomeText}>Добро пожаловать в</h2>
-            <Logo />
-            <h1 className={styles.title}>PROJECT FLOW</h1>
+            <Logo size={300} />
           </div>
           <RegisterForm />
         </div>
