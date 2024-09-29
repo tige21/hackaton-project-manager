@@ -1,7 +1,8 @@
 import { useSortable } from "@dnd-kit/sortable";
 import React, { useEffect, useState } from "react";
 import { UniqueIdentifier } from "@dnd-kit/core";
-import { Task, TaskPriority, TaskType } from "../Task/Task.tsx";
+import { Task } from "../Task/Task.tsx";
+import {TaskPriority, TaskType} from "../../../../utils/taskUtils.tsx";
 
 interface SortableTaskProps {
   containerId: UniqueIdentifier;
@@ -14,7 +15,6 @@ interface SortableTaskProps {
   title?: UniqueIdentifier;
   deadlineDate: string;
   style(args: unknown): React.CSSProperties;
-onClick?: () => void;
   getIndex(id: UniqueIdentifier): number;   
 
   wrapperStyle({ index }: { index: number }): React.CSSProperties;
@@ -33,7 +33,6 @@ export function SortableTask({
   getIndex,
   wrapperStyle,
   deadlineDate,
-  onClick
 }: SortableTaskProps) {
   const {
     setNodeRef,
@@ -52,7 +51,6 @@ export function SortableTask({
 
   return (
     <Task
-    onClick={onClick}
       id={id}
       type={type}
       priority={priority}

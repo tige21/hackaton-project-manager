@@ -32,6 +32,7 @@ import { Task } from "../Task/Task.tsx";
 import TaskDetails from "../../../Tasks/components/TaskDetail/TaskDetail.tsx";
 import PeopleModal from "../PeopleModal/PeopleModal.tsx";
 import {useGetTasksQuery} from "../../api.ts";
+import {ITask} from "../../type";
 
 const dropAnimation: DropAnimation = {
   sideEffects: defaultDropAnimationSideEffects({
@@ -98,7 +99,6 @@ export function Dashboard({
   minimal = false,
   modifiers,
   strategy = verticalListSortingStrategy,
-  vertical = false,
   scrollable,
   handleTaskClick,
   selectedTask,
@@ -112,8 +112,8 @@ export function Dashboard({
       description: "Описание задачи",
       deadlineDate: "15.10.2024",
       executor: "Ivanov@yandex.ru",
-      type: "Эпик",
-      priority: "Medium",
+      type: "EPIC",
+      priority: "MEDIUM",
       status: "В работе",
     },
     {
@@ -123,8 +123,8 @@ export function Dashboard({
       description: "Описание задачи",
       deadlineDate: "16.10.2024",
       executor: "Petrov@yandex.ru",
-      type: "Задача",
-      priority: "High",
+      type: "TASK",
+      priority: "MEDIUM",
       status: "Запланировано",
     },
     {
@@ -134,8 +134,8 @@ export function Dashboard({
       description: "Описание задачи",
       deadlineDate: "16.10.2024",
       executor: "Petrov@yandex.ru",
-      type: "Задача",
-      priority: "Critical",
+      type: "BUG",
+      priority: "CRITICAL",
       status: "Запланировано",
     },
   ];
@@ -159,8 +159,8 @@ export function Dashboard({
   const recentlyMovedToNewContainer = useRef(false);
   const isSortingContainer = activeId ? containers.includes(activeId) : false;
 
-  const { data, error } = useGetTasksQuery();
-
+  // const { data, error } = useGetTasksQuery();
+  fetch("http://localhost:8081/api/tasks")
   const collisionDetectionStrategy: CollisionDetection = useCallback(
     (args) => {
       if (activeId && activeId in items) {
@@ -416,19 +416,16 @@ export function Dashboard({
         style={{
           display: "inline-grid",
           boxSizing: "border-box",
-          padding: 20,
-          gridAutoFlow: vertical ? "row" : "column",
+          gridAutoFlow: "column",
           overflowX: "auto",
+          height: "100%",
           width: "100%",
+          padding: "0 70px 0 70px"
         }}
       >
         <SortableContext
           items={[...containers, PLACEHOLDER_ID]}
-          strategy={
-            vertical
-              ? verticalListSortingStrategy
-              : horizontalListSortingStrategy
-          }
+          strategy={horizontalListSortingStrategy}
         >
           {containers.map((containerId) => (
             <DroppableContainer
@@ -452,7 +449,6 @@ export function Dashboard({
                     >
                       <SortableTask
                         type={task?.type || "TASK"}
-                        handleClick={() => console.log("123")}
                         priority={task?.priority || "MEDIUM"}
                         deadlineDate={task?.deadlineDate || "invalid date"}
                         disabled={isSortingContainer}
@@ -481,7 +477,6 @@ export function Dashboard({
         </DragOverlay>,
         document.body
       )}
-      {/* Show People Modal */}
     </DndContext>
   );
 

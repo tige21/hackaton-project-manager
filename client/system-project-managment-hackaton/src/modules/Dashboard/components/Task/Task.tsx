@@ -2,88 +2,10 @@ import React, { useEffect } from "react";
 import classNames from "classnames";
 import { DraggableSyntheticListeners, UniqueIdentifier } from "@dnd-kit/core";
 import type { Transform } from "@dnd-kit/utilities";
-import typeTask from "../../../../assets/taskTypeIcons/typeTask.svg";
-import typeEpic from "../../../../assets/taskTypeIcons/typeEpic.svg";
-import typeBug from "../../../../assets/taskTypeIcons/typeBug.svg";
-import typeStory from "../../../../assets/taskTypeIcons/typeStory.svg";
-import typeSubtask from "../../../../assets/taskTypeIcons/typeSubtask.svg";
 import styles from "./Task.module.scss";
 import { Avatar } from "antd";
-
-export enum TaskType {
-  EPIC = "epic",
-  BUG = "bug",
-  TASK = "task",
-  STORY = "story",
-  SUBTASK = "subtask",
-}
-
-export enum TaskPriority {
-  LOW = "low",
-  MEDIUM = "medium",
-  HIGH = "high",
-  CRITICAL = "critical",
-}
-
-const renderTaskType = (taskType: TaskType) => {
-  let typeIcon;
-
-  switch (taskType) {
-    case TaskType.EPIC:
-      typeIcon = typeEpic;
-      break;
-    case TaskType.BUG:
-      typeIcon = typeBug;
-      break;
-    case TaskType.TASK:
-      typeIcon = typeTask;
-      break;
-    case TaskType.STORY:
-      typeIcon = typeStory;
-      break;
-    case TaskType.SUBTASK:
-      typeIcon = typeSubtask;
-      break;
-    default:
-      typeIcon = typeTask;
-      break;
-  }
-
-  return (
-    <div className={styles.TaskTypeContainer}>
-      <img src={typeIcon} alt={"taskType"} className={styles.TaskTypeImg} />
-    </div>
-  );
-};
-
-const renderTaskPriority = (taskPriority: TaskPriority) => {
-  let priorityColor;
-
-  switch (taskPriority) {
-    case TaskPriority.LOW:
-      priorityColor = "#B7FFC2";
-      break;
-    case TaskPriority.MEDIUM:
-      priorityColor = "#B7D6FF";
-      break;
-    case TaskPriority.HIGH:
-      priorityColor = "#FEFFB7";
-      break;
-    case TaskPriority.CRITICAL:
-      priorityColor = "#FFB2B2";
-      break;
-    default:
-      priorityColor = "#8f8f8f";
-      break;
-  }
-
-  return (
-    <div
-      className={styles.TaskPriority}
-      style={{ backgroundColor: priorityColor }}
-    />
-  );
-};
+import {renderTaskPriority, renderTaskType, TaskPriority, TaskType} from "../../../../utils/taskUtils.tsx";
+import {UserOutlined} from "@ant-design/icons";
 
 export interface TaskProps {
   dragOverlay?: boolean;
@@ -196,7 +118,7 @@ export const Task = React.memo(
               <div className={styles.TaskID}>{id}</div>
               <div className={styles.TaskUsers}>
                 <Avatar.Group>
-                  <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=1" />
+                  <Avatar icon={<UserOutlined />} />
                 </Avatar.Group>
               </div>
             </div>

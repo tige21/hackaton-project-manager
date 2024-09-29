@@ -1,4 +1,3 @@
-import React from 'react';
 import { Modal, Button, Input, Select, Table } from 'antd';
 import { DeleteOutlined, SearchOutlined } from '@ant-design/icons';
 import styles from './PeopleModal.module.scss';
