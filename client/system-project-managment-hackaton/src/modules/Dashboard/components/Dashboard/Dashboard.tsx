@@ -30,8 +30,8 @@ import { DroppableContainer } from "../DroppableContainer/DroppableContainer.tsx
 import { SortableTask } from "../SortableTask/SortableTask.tsx";
 import { Task } from "../Task/Task.tsx";
 import TaskDetails from "../../../Tasks/components/TaskDetail/TaskDetail.tsx";
-import {ITask} from "../../type";
-import {useGetTasksByStatusesQuery, useGetTasksQuery} from "../../api.ts";
+import { ITask } from "../../type";
+import { useGetTasksByStatusesQuery, useGetTasksQuery } from "../../api.ts";
 
 const dropAnimation: DropAnimation = {
   sideEffects: defaultDropAnimationSideEffects({
@@ -103,51 +103,129 @@ export function Dashboard({
   selectedTask,
   onClose,
 }: Props) {
-  // const tasks: ITask[] = [
-  //   {
-  //     id: "A1",
-  //     title: "Task 1 расписать",
-  //     project: "IT INNO HACK",
-  //     description: "Описание задачи",
-  //     deadlineDate: "15.10.2024",
-  //     executor: "Ivanov@yandex.ru",
-  //     type: "EPIC",
-  //     priority: "MEDIUM",
-  //     status: "В работе",
-  //   },
-  //   {
-  //     id: "A2",
-  //     title: "Task 2 расписать",
-  //     project: "IT INNO HACK",
-  //     description: "Описание задачи",
-  //     deadlineDate: "16.10.2024",
-  //     executor: "Petrov@yandex.ru",
-  //     type: "TASK",
-  //     priority: "MEDIUM",
-  //     status: "Запланировано",
-  //   },
-  //   {
-  //     id: "A3",
-  //     title: "Task 3 расписать",
-  //     project: "IT INNO HACK",
-  //     description: "Описание задачи",
-  //     deadlineDate: "16.10.2024",
-  //     executor: "Petrov@yandex.ru",
-  //     type: "BUG",
-  //     priority: "CRITICAL",
-  //     status: "Запланировано",
-  //   },
-  // ];
+  const tasks: ITask[] = [
+    {
+      id: "A4",
+      title: "Task 4 разработать",
+      project: "IT INNO HACK",
+      description: "Описание задачи",
+      deadlineDate: "17.10.2024",
+      executor: "Ivanov@yandex.ru",
+      type: "STORY",
+      priority: "LOW",
+      status: "В работе",
+  },
+  {
+      id: "A5",
+      title: "Task 5 протестировать",
+      project: "IT INNO HACK",
+      description: "Описание задачи",
+      deadlineDate: "18.10.2024",
+      executor: "Sidorov@yandex.ru",
+      type: "SUBTASK",
+      priority: "HIGH",
+      status: "В работе",
+  },
+  {
+      id: "A6",
+      title: "Task 6 исправить баги",
+      project: "IT INNO HACK",
+      description: "Описание задачи",
+      deadlineDate: "19.10.2024",
+      executor: "Petrov@yandex.ru",
+      type: "BUG",
+      priority: "CRITICAL",
+      status: "Запланировано",
+  },
+  {
+      id: "A7",
+      title: "Task 7 завершить",
+      project: "IT INNO HACK",
+      description: "Описание задачи",
+      deadlineDate: "20.10.2024",
+      executor: "Ivanov@yandex.ru",
+      type: "EPIC",
+      priority: "MEDIUM",
+      status: "Завершено",
+  },
+  {
+      id: "A8",
+      title: "Task 8 документировать",
+      project: "IT INNO HACK",
+      description: "Описание задачи",
+      deadlineDate: "21.10.2024",
+      executor: "Sidorov@yandex.ru",
+      type: "TASK",
+      priority: "LOW",
+      status: "В работе",
+  },
+  {
+      id: "A9",
+      title: "Task 9 настроить CI/CD",
+      project: "IT INNO HACK",
+      description: "Описание задачи",
+      deadlineDate: "22.10.2024",
+      executor: "Ivanov@yandex.ru",
+      type: "EPIC",
+      priority: "HIGH",
+      status: "Запланировано",
+  },
+  {
+      id: "A10",
+      title: "Task 10 провести тестирование",
+      project: "IT INNO HACK",
+      description: "Описание задачи",
+      deadlineDate: "23.10.2024",
+      executor: "Petrov@yandex.ru",
+      type: "BUG",
+      priority: "MEDIUM",
+      status: "В работе",
+  },
+  {
+      id: "A11",
+      title: "Task 11 обновить документацию",
+      project: "IT INNO HACK",
+      description: "Описание задачи",
+      deadlineDate: "24.10.2024",
+      executor: "Ivanov@yandex.ru",
+      type: "STORY",
+      priority: "LOW",
+      status: "Запланировано",
+  },
+  {
+      id: "A12",
+      title: "Task 12 провести ретроспективу",
+      project: "IT INNO HACK",
+      description: "Описание задачи",
+      deadlineDate: "25.10.2024",
+      executor: "Sidorov@yandex.ru",
+      type: "SUBTASK",
+      priority: "HIGH",
+      status: "В работе",
+  },
+  {
+      id: "A13",
+      title: "Task 13 исправить критические ошибки",
+      project: "IT INNO HACK",
+      description: "Описание задачи",
+      deadlineDate: "26.10.2024",
+      executor: "Ivanov@yandex.ru",
+      type: "BUG",
+      priority: "CRITICAL",
+      status: "Запланировано",
+  }
+  
+  ];
 
   const [items, setItems] = useState<Items>(
     () =>
       initialItems ?? {
-        backlog: [1, 2, 3],
-        inProgress: [],
-        review: [],
+        backlog: ["A1", "A2", "A3", "A4"],
+        inProgress: ["A5", "A6", "A8", "A10"],
+        review: ["A9", "A12"],
         testing: [],
-        ready: [],
-      }
+        ready: ["A7", "A11", "A13"]
+    }
   );
   // const [selectedTask, setSelectedTask] = useState(null); // Новое состояние для выбранной задачи
   const [containers, setContainers] = useState(
@@ -158,14 +236,15 @@ export function Dashboard({
   const recentlyMovedToNewContainer = useRef(false);
   const isSortingContainer = activeId ? containers.includes(activeId) : false;
 
-  const { data: tasks, error: tasksError, isFetching } = useGetTasksQuery();
-  const { data: tasksByStatuses, error: tasksByStatusesError } = useGetTasksByStatusesQuery("1");
-
-  useEffect(() => {
-    if (tasksByStatuses) {
-      setItems(tasksByStatuses)
-    }
-  }, [tasksByStatuses])
+  // const { data: tasks, error: tasksError, isFetching} = useGetTasksQuery();
+  // const { data: tasksByStatuses, error: tasksByStatusesError } =
+  //   useGetTasksByStatusesQuery("1");
+  // console.log(tasks);
+  // useEffect(() => {
+  //   if (tasksByStatuses) {
+  //     setItems(tasksByStatuses);
+  //   }
+  // }, [tasksByStatuses]);
 
   const collisionDetectionStrategy: CollisionDetection = useCallback(
     (args) => {
@@ -227,7 +306,6 @@ export function Dashboard({
       },
     })
   );
-
 
   const findContainer = (id: UniqueIdentifier) => {
     if (id in items) {
@@ -430,7 +508,7 @@ export function Dashboard({
           overflowX: "auto",
           height: "100%",
           width: "100%",
-          padding: "0 70px 0 70px"
+          padding: "0 70px 0 70px",
         }}
       >
         <SortableContext

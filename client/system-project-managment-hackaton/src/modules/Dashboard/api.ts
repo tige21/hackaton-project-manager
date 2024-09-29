@@ -8,7 +8,7 @@ export const projectsApi = baseApi.injectEndpoints({
         }),
         getTasks: builder.query<ITask[], void>({
             // query: (projectId: string, userId?: string) => `tasks?projectId=${projectId}&userId=${userId}`,
-            query: () => `tasks`,
+            query: () => `api/tasks`,
         }),
         getTasksByStatuses: builder.query<ITasksByStatuses, string>({
             query: (projectId: string) => `tasks/project/${projectId}/statuses`

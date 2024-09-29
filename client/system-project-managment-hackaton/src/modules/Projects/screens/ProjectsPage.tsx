@@ -5,51 +5,52 @@ import styles from "./ProjectsPage.module.scss";
 import ProjectCard from "../components/ProjectCard/ProjectCard";
 import SideBar from "../../../components/SideBar/SideBar";
 import Button from "../../../components/Button/Button";
+import { useAddProjectMutation, useGetUserProjectsQuery } from "../api";
 
-const projects = [
-  {
-    title: "INNO HACK",
-    participants: [
-      "https://example.com/avatar1.jpg",
-      "https://example.com/avatar2.jpg",
-    ],
-    creationDate: "12/10/24",
-    admin: "Ivanov@yandex.ru",
-    adminName: "Иванов Иван",
-  },
-  {
-    title: "IT-отдел",
-    participants: [
-      "https://example.com/avatar3.jpg",
-      "https://example.com/avatar4.jpg",
-    ],
-    creationDate: "12/10/24",
-    admin: "Ivanov@yandex.ru",
-    adminName: "Иванов Иван",
-  },
-  {
-    title: "Проект 2",
-    participants: [
-      "https://example.com/avatar1.jpg",
-      "https://example.com/avatar2.jpg",
-    ],
-    creationDate: "12/10/24",
-    admin: "Ivanov@yandex.ru",
-    adminName: "Иванов Иван",
-  },
-  {
-    title: "АмоГусы",
-    participants: [
-      "https://example.com/avatar3.jpg",
-      "https://example.com/avatar4.jpg",
-    ],
-    creationDate: "12/10/24",
-    admin: "Ivanov@yandex.ru",
-    adminName: "Иванов Иван",
-  },
-];
+const formatDate = (date: Date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Добавляем ведущий ноль, если нужно
+  const day = String(date.getDate()).padStart(2, "0"); // Добавляем ведущий ноль, если нужно
+  return `${year}-${month}-${day}`;
+};
 
 const ProjectsPage: React.FC = () => {
+  const { data: projects, isFetching: isProjectsFetching, refetch } =
+    useGetUserProjectsQuery();
+  const [addProject] = useAddProjectMutation(); // Используем мутатор для добавления проекта
+
+  const participants = [
+    "https://example.com/avatar1.jpg",
+    "https://example.com/avatar2.jpg",
+  ];
+
+  const handleOk = async () => {
+    if (newProjectName) {
+      const currentDate = new Date();
+      const startDate = formatDate(currentDate); // Текущая дата
+      const endDate = formatDate(
+        new Date(currentDate.setMonth(currentDate.getMonth() + 1))
+      ); // Добавляем месяц для конечной даты
+
+      try {
+        // Здесь вызываем мутатор для создания проекта
+        await addProject({
+          name: newProjectName,
+          description: "This is a sample project", // Пример описания
+          startDate: startDate, // Текущая дата
+          endDate: endDate, // Конечная дата через месяц
+        }).unwrap();
+        refetch();
+        console.log("Project created:", newProjectName);
+      } catch (error) {
+        console.error("Failed to create project:", error);
+      }
+    }
+    setIsModalVisible(false); // Закрываем модальное окно
+  };
+
+  const admin = "Ivanov@yandex.ru";
+  const adminName = "Иванов Иван";
   const [isModalVisible, setIsModalVisible] = useState(false); // Состояние для модального окна
   const [newProjectName, setNewProjectName] = useState("");
 
@@ -57,15 +58,19 @@ const ProjectsPage: React.FC = () => {
     setIsModalVisible(true); // Показываем модальное окно
   };
 
-  const handleOk = () => {
-    console.log("New Project Name:", newProjectName);
-    setIsModalVisible(false); // Закрываем модальное окно
-    // Логика создания проекта может быть добавлена здесь
-  };
+  // const handleOk = () => {
+  //   console.log("New Project Name:", newProjectName);
+  //   setIsModalVisible(false); // Закрываем модальное окно
+  //   // Логика создания проекта может быть добавлена здесь
+  // };
 
   const handleCancel = () => {
     setIsModalVisible(false); // Закрываем модальное окно
   };
+
+  if (isProjectsFetching) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className={styles.projectsPageContainer}>
@@ -75,7 +80,7 @@ const ProjectsPage: React.FC = () => {
         <div className={styles.header}>
           <div style={{ fontWeight: "bold", fontSize: 60 }}>ВСЕ ПРОЕКТЫ</div>
           <Button
-            text="Создать задачу"
+            text="Создать проект"
             icon={<PlusCircleOutlined />}
             indentation={12}
             onClick={showModal} // Открытие модального окна при клике на кнопку
@@ -85,11 +90,11 @@ const ProjectsPage: React.FC = () => {
           {projects?.map((project, index) => (
             <ProjectCard
               key={index}
-              name={project.title}
-              participants={project.participants}
-              creationDate={project.creationDate}
-              admin={project.admin}
-              adminName={project.adminName}
+              name={project.name}
+              participants={participants}
+              creationDate={project.startDate}
+              admin={admin}
+              adminName={adminName}
             />
           ))}
         </div>
@@ -97,7 +102,7 @@ const ProjectsPage: React.FC = () => {
 
       {/* Модальное окно для создания новой задачи */}
       <Modal
-      className={styles.modal}
+        className={styles.modal}
         title="Введите название проекта"
         visible={isModalVisible}
         onOk={handleOk} // Обработка кнопки OK
@@ -120,7 +125,7 @@ const ProjectsPage: React.FC = () => {
           }}
         />
         <AntButton type="primary" onClick={handleOk} style={{ width: "100%" }}>
-          Создать
+          Создать проект
         </AntButton>
       </Modal>
     </div>
