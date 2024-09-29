@@ -47,11 +47,8 @@ func InternalServerError(err error) *AppError {
 		return NotFoundError(err)
 	}
 
-	if errors.Is(err, ErrUserIsExistWithEmail) {
-		return ConflictError(err)
-	}
-
-	if errors.Is(err, ErrRefreshTokenNotFound) {
+	if errors.Is(err, ErrUserIsExistWithEmail) || errors.Is(err, ErrRefreshTokenNotFound) || errors.Is(err, ErrInvalidCompetency) ||
+		errors.Is(err, ErrCompetencyPointIsHigherThenMaxLimit) || errors.Is(err, ErrCompetencyPointIsLessThenLowLimit) {
 		return ConflictError(err)
 	}
 

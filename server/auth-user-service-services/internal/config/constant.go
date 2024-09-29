@@ -27,4 +27,7 @@ const (
 	OrderCreatedDateDB = "created_date"
 	SortDesc           = "desc"
 	SortAsc            = "asc"
+
+	CompetencyIncrease = "increase"
+	CompetencyDecrease = "decrease"
 )

@@ -24,7 +24,7 @@ func appMiddleware(h appHandler) http.HandlerFunc {
 		pattern := routeContext.RoutePattern()
 		defer metrics.ObserveRequestDurationSeconds(method, pattern)()
 
-		if routeContext.RoutePatterns[0] != authV1+"/*" {
+		if routeContext.RoutePatterns[0] != authV1+"/*" && routeContext.RoutePatterns[0] != integrationV1+"/*" {
 
 			authHeader := strings.Split(r.Header.Get("Authorization"), "Bearer ")
 			if len(authHeader) != 2 {

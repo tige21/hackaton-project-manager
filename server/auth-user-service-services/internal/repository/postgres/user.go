@@ -25,6 +25,8 @@ type IUser interface {
 	UpdateUserByID(ctx context.Context, userUpdate entity.UserUpdate) (entity.User, error)
 	GetUsers(ctx context.Context, filter entity.Filter) ([]entity.User, error)
 	UpdatePrivateUserByID(ctx context.Context, userUpdate entity.UserUpdatePrivate) (entity.User, error)
+	GetCompetencyLevelByUserID(ctx context.Context, userID string) (int, error)
+	UpdateCompetencyLevelByUserID(ctx context.Context, userID string, competencyLevel int) (int, error)
 }
 
 type User struct {
@@ -293,4 +295,60 @@ func prepareQueryUpdatePrivate(user entity.UserUpdatePrivate) (string, []interfa
 
 	query := fmt.Sprintf("UPDATE %s SET %s WHERE id=$%v RETURNING id,name,surname,email,password,role,created_date,updated_date;", "users", setQuery, argId)
 	return query, args
+}
+
+func (u *User) GetCompetencyLevelByUserID(ctx context.Context, userID string) (int, error) {
+	defer metrics.ObserveRequestDurationPerMethodDB(metrics.Postgres, metrics.GetCompetencyLevelByUserIDDb)()
+	q := `
+		SELECT competency_level
+		From users
+		WHERE id = $1;
+		`
+
+	var competenceLevel *int
+	err := u.client.QueryRow(ctx, q, userID).Scan(&competenceLevel)
+	if err != nil {
+		metrics.IncRequestTotalDB(metrics.GetCompetencyLevelByUserIDDb, metrics.FailStatus)
+		if errors.Is(err, pgx.ErrNoRows) {
+			return 0, apperror.ErrUserNotFound
+		}
+		return 0, err
+	}
+
+	metrics.IncRequestTotalDB(metrics.GetCompetencyLevelByUserIDDb, metrics.OkStatus)
+	if competenceLevel == nil {
+		return 0, nil
+	}
+	return *competenceLevel, nil
+}
+
+// UpdateCompetencyLevelByUserID - обновление компетенций
+func (u *User) UpdateCompetencyLevelByUserID(ctx context.Context, userID string, competencyLevel int) (int, error) {
+	defer metrics.ObserveRequestDurationPerMethodDB(metrics.Postgres, metrics.UpdateCompetencyLevelByUserIDDb)()
+	q := `
+		UPDATE users SET competency_level=$1 
+		WHERE id=$2
+		RETURNING competency_level;
+		`
+
+	var competenceLevel *int
+	err := u.client.QueryRow(ctx, q, competencyLevel, userID).Scan(&competenceLevel)
+	if err != nil {
+		metrics.IncRequestTotalDB(metrics.UpdateCompetencyLevelByUserIDDb, metrics.FailStatus)
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) {
+			if pgErr.Code == pgerrcode.CheckViolation {
+				return 0, apperror.ErrInvalidCompetency
+			}
+			return 0, err
+		}
+		return 0, err
+	}
+
+	metrics.IncRequestTotalDB(metrics.UpdateCompetencyLevelByUserIDDb, metrics.OkStatus)
+	if competenceLevel == nil {
+		return 0, nil
+	}
+
+	return *competenceLevel, nil
 }
