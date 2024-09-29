@@ -21,7 +21,7 @@ Content-Type: application/json
 }
 
 ### Refresh
-GET http://localhost:8080/public/v1/auth/refresh/6e916116-9675-4851-8b0b-28c400cb01ba
+GET http://localhost:8080/public/v1/auth/refresh/f9177080-c5f2-487f-b095-ac1aaa1127bf
 Content-Type: application/json
 
 
@@ -33,7 +33,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsI
 ### Get Users with filters
 GET http://localhost:8080/public/v1/users?sort=asc&order=surname&offset=0&limit=20
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTcyNzU2NTExNCwianRpIjoiYTEzZjA0ODQtZGU0Yi00MDdhLWI5NGQtMWUyMTk0YzQ4MTE3IiwiZW1haWwiOiJib2dhdG92Z3JtbkBtYWlsLnJ1Iiwicm9sZSI6ImRldmVsb3BlciJ9.LV0cWWZoHP8xn3lT4jximnol9RosDrs3JU-BtknNzB8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsidXNlcnMiXSwiZXhwIjoxNzI3NTY5NDMzLCJqdGkiOiJhMTNmMDQ4NC1kZTRiLTQwN2EtYjk0ZC0xZTIxOTRjNDgxMTciLCJlbWFpbCI6ImJvZ2F0b3Zncm1uQG1haWwucnUiLCJyb2xlIjoiZGV2ZWxvcGVyIn0.fhtM6ELIe7v_VfvNS4W16tTrVjq04gVSQf9vKIw0ChQ
 
 
 ### Delete User By ID

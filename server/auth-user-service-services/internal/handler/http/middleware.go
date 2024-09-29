@@ -8,7 +8,7 @@ import (
 	"github.com/GermanBogatov/user-service/internal/config"
 	"github.com/GermanBogatov/user-service/internal/entity"
 	"github.com/go-chi/chi/v5"
-	"github.com/golang-jwt/jwt/v4"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/pkg/errors"
 	"net/http"
 	"strings"
@@ -63,7 +63,7 @@ func appMiddleware(h appHandler) http.HandlerFunc {
 				return
 			}
 
-			setCtxValue(r, config.ParamID, claims.Id)
+			setCtxValue(r, config.ParamID, claims.ID)
 			setCtxValue(r, config.ParamRole, claims.Role)
 		}
 
