@@ -1,0 +1,38 @@
+.customModal {
+    background-color: rgba(10, 15, 37, 0.9); // Темный фон модального окна
+    border-radius: 16px; // Закругленные углы
+  
+    .ant-modal-content {
+      background-color: rgba(10, 15, 37, 0.9); // Настраиваем фон
+      border-radius: 16px;
+      padding: 24px;
+    }
+  
+    .modalContent {
+      text-align: center;
+  
+      h2 {
+        color: #aad3ff; // Цвет заголовка
+        margin-bottom: 24px;
+      }
+  
+      .inputField {
+        background-color: transparent;
+        border: none;
+        border-bottom: 1px solid #aad3ff;
+        color: #aad3ff;
+        margin-bottom: 24px;
+        padding: 8px 0;
+        width: 100%;
+      }
+  
+      .createButton {
+        background-color: #4d7aff;
+        border: none;
+        padding: 8px 24px;
+        border-radius: 16px;
+        font-weight: bold;
+      }
+    }
+  }
+  

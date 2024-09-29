@@ -1,12 +1,12 @@
 .sidebar {
     min-width: 250px;
-    background-color: #0a0f25;
+    background-color: #1f2a45;
     color: white;
-    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding-top: 20px;
+    overflow-y: auto;
   }
   .group1{
     display: flex;
@@ -31,8 +31,7 @@
     flex-direction: column;
     gap: 0px;
     width: 100%;
-    background-color: #0a0f25;
-    color: white;
+    background-color: #1f2a45;    color: white;
   }
   
   .active {

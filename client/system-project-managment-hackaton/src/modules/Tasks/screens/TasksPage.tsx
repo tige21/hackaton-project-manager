@@ -1,19 +1,20 @@
 import React from "react";
-import { Button, Select } from "antd";
-import { PlusOutlined, FilterOutlined } from "@ant-design/icons";
+// import { Select } from "antd";
 import styles from "./TasksPage.module.scss";
 import TaskCard from "../components/TaskCaed/TaskCard";
 import SideBar from "../../../components/SideBar/SideBar";
+import autoTaskDistribution from "../../../assets/autoTaskDistribution.svg"
+import {AddTaskButton} from "../../../components/AddTaskButton/AddTaskButton.tsx";
 
-const { Option } = Select;
+// const { Option } = Select;
 
 const tasksData = [
   {
     id: "U1453",
     name: "Задача 1 расписать",
     project: "IT INNO HACK",
-    typeIcon: <span>⚡</span>, // Условная иконка для типа
-    priorityColor: "green",
+    type: "TASK",
+    priorityColor: "#B7FFC2",
     deadline: "15.10.2024",
     executor: "Ivanov@yandex.ru",
   },
@@ -21,8 +22,8 @@ const tasksData = [
     id: "U1454",
     name: "Задача 2 расписать",
     project: "IT INNO HACK",
-    typeIcon: <span>✔</span>,
-    priorityColor: "blue",
+    type: "BUG",
+    priorityColor: "#B7D6FF",
     deadline: "16.10.2024",
     executor: "Petrov@yandex.ru",
   },
@@ -30,31 +31,48 @@ const tasksData = [
     id: "U1455",
     name: "Задача 3 расписать",
     project: "IT INNO HACK",
-    typeIcon: <span>⚡</span>,
-    priorityColor: "red",
+    type: "STORY",
+    priorityColor: "#FF8686",
     deadline: "17.10.2024",
     executor: "Ivanov@yandex.ru",
   },
 ];
 
 const TasksPage: React.FC = () => {
+  const handleAutoDistribute = () => {
+    console.log("Автоматическое распределение задач");
+  };
+
   return (
     <div className={styles.taskPage}>
       {/* Заголовок и действия */}
       <SideBar />
       <div className={styles.container}>
         <div className={styles.header}>
-          <div style={{flex: 1}}>
-            <div style={{ fontWeight: "bold", fontSize: 72 }}>Все задачи</div>
-            <div className={styles.actions}>
-              <Button type="primary" icon={<PlusOutlined />}>
-                Создать задачу
-              </Button>
-              <Button>Автоматическое распределение задач</Button>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              flexDirection: "row",
+              width: "100%",
+              alignItems: "center",
+            }}
+          >
+            <div className={styles.title}>Все задачи</div>
+            <div style={{display: "flex", flexDirection: "row", height: "100%", gap: 20}}>
+              <button
+                  className={styles.customButton}
+                  onClick={handleAutoDistribute}
+              >
+                <img src={autoTaskDistribution}/>
+                Автоматическое распределение задач
+              </button>
+
+              <AddTaskButton/>
             </div>
           </div>
 
-          <div>
+          {/* <div className={styles.filters}>
             <Select
               defaultValue="date"
               style={{ width: 120 }}
@@ -63,8 +81,11 @@ const TasksPage: React.FC = () => {
               <Option value="date">Дата</Option>
               <Option value="name">Название</Option>
             </Select>
-            <Button icon={<FilterOutlined />}>Фильтровать</Button>
-          </div>
+            <Button
+              icon={<FilterOutlined />}
+              text="Фильтровать"
+              onClick={handleCreateTask} indentation={12}            />
+          </div> */}
         </div>
 
         {/* Таблица задач */}
@@ -85,7 +106,7 @@ const TasksPage: React.FC = () => {
                 id={task.id}
                 name={task.name}
                 project={task.project}
-                typeIcon={task.typeIcon}
+                type={task.type}
                 priorityColor={task.priorityColor}
                 deadline={task.deadline}
                 executor={task.executor}

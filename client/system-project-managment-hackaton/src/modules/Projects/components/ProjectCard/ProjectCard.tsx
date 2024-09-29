@@ -3,7 +3,7 @@ import { Avatar } from "antd";
 import styles from "./ProjectCard.module.scss";
 
 interface ProjectCardProps {
-  title: string;
+  name: string;
   participants: string[];
   creationDate: string;
   admin: string;
@@ -11,7 +11,7 @@ interface ProjectCardProps {
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({
-  title,
+  name,
   participants,
   creationDate,
   admin,
@@ -20,7 +20,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   return (
     <div className={styles.projectCard}>
       <div className={styles.container}>
-        <div className={styles.projectTitle}>{title}</div>
+        <div className={styles.projectTitle}>{name}</div>
         <div className={styles.participantsContainer}>
           <div>Участники:</div>
           <div className={styles.participants}>

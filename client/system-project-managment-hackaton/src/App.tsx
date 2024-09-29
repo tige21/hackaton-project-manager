@@ -10,7 +10,7 @@ import RegisterPage from "./modules/Auth/screens/RegisterScreen/RegisterScreen";
 import CreateProjectPage from "./modules/Projects/screens/ProjectsPage";
 import DashboardPage from "./modules/Dashboard/screens/DashboardPage";
 import ProjectsPage from "./modules/Projects/screens/ProjectsPage";
-import Layout from "./components/Layout/Layout";
+// import Layout from "./components/Layout/Layout";
 import TasksPage from "./modules/Tasks/screens/TasksPage";
 // import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 

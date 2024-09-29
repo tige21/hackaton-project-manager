@@ -1,0 +1,30 @@
+.custom-task-modal {
+  .ant-modal-body {
+    background-color: #1b1e34;
+    color: white;
+    border-radius: 8px;
+  }
+
+  .ant-form-item-label > label {
+    color: #aad3ff;
+  }
+
+  .ant-input,
+  .ant-select-selector,
+  .ant-picker-input {
+    background-color: transparent;
+    border: 1px solid #aad3ff;
+    color: white;
+  }
+
+  .ant-upload-drag {
+    border: 1px dashed #aad3ff;
+    background: transparent;
+    color: #aad3ff;
+  }
+
+  .ant-btn-primary {
+    background-color: #aad3ff;
+    border: none;
+  }
+}

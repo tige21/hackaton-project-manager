@@ -12,9 +12,9 @@ import java.util.List;
 @AllArgsConstructor
 public class TaskStatusResponseDto {
 
-    private List<TaskDto> backlog = new ArrayList<>();
-    private List<TaskDto> inProgress = new ArrayList<>();
-    private List<TaskDto> review = new ArrayList<>();
-    private List<TaskDto> testing = new ArrayList<>();
-    private List<TaskDto> ready = new ArrayList<>();
+    private List<Long> backlog = new ArrayList<>();
+    private List<Long> inProgress = new ArrayList<>();
+    private List<Long> review = new ArrayList<>();
+    private List<Long> testing = new ArrayList<>();
+    private List<Long> ready = new ArrayList<>();
 }

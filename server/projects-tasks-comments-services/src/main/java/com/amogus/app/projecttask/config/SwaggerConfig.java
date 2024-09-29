@@ -1,10 +1,13 @@
 package com.amogus.app.projecttask.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
 import io.swagger.v3.oas.annotations.servers.Server;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
@@ -26,14 +29,22 @@ import org.springframework.context.annotation.Configuration;
         ),
         servers = {
                 @Server(
-                        url = "http://localhost:8080",
+                        url = "http://localhost:8081",
                         description = "Local Dev Server"
                 ),
                 @Server(
                         url = "https://api.amogus.com",
                         description = "Production Server"
                 )
-        }
+        },
+        security = @SecurityRequirement(name = "bearerAuth") // Указываем, что нужен токен для запросов
+)
+@SecurityScheme(
+        name = "bearerAuth",
+        type = SecuritySchemeType.HTTP,
+        scheme = "bearer",
+        bearerFormat = "JWT",
+        description = "Введите JWT токен для аутентификации (пример: Bearer {токен})"
 )
 public class SwaggerConfig {
 }
