@@ -1,10 +1,10 @@
 import React from "react";
 // import { Select } from "antd";
-import { CheckSquareOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import styles from "./TasksPage.module.scss";
 import TaskCard from "../components/TaskCaed/TaskCard";
 import SideBar from "../../../components/SideBar/SideBar";
-import Button from "../../../components/Button/Button";
+import autoTaskDistribution from "../../../assets/autoTaskDistribution.svg"
+import {AddTaskButton} from "../../../components/AddTaskButton/AddTaskButton.tsx";
 
 // const { Option } = Select;
 
@@ -13,8 +13,8 @@ const tasksData = [
     id: "U1453",
     name: "Задача 1 расписать",
     project: "IT INNO HACK",
-    typeIcon: <span>⚡</span>, // Условная иконка для типа
-    priorityColor: "green",
+    type: "TASK",
+    priorityColor: "#B7FFC2",
     deadline: "15.10.2024",
     executor: "Ivanov@yandex.ru",
   },
@@ -22,8 +22,8 @@ const tasksData = [
     id: "U1454",
     name: "Задача 2 расписать",
     project: "IT INNO HACK",
-    typeIcon: <span>✔</span>,
-    priorityColor: "blue",
+    type: "BUG",
+    priorityColor: "#B7D6FF",
     deadline: "16.10.2024",
     executor: "Petrov@yandex.ru",
   },
@@ -31,8 +31,8 @@ const tasksData = [
     id: "U1455",
     name: "Задача 3 расписать",
     project: "IT INNO HACK",
-    typeIcon: <span>⚡</span>,
-    priorityColor: "red",
+    type: "STORY",
+    priorityColor: "#FF8686",
     deadline: "17.10.2024",
     executor: "Ivanov@yandex.ru",
   },
@@ -41,10 +41,6 @@ const tasksData = [
 const TasksPage: React.FC = () => {
   const handleAutoDistribute = () => {
     console.log("Автоматическое распределение задач");
-  };
-
-  const handleCreateTask = () => {
-    console.log("Создать задачу");
   };
 
   return (
@@ -59,23 +55,20 @@ const TasksPage: React.FC = () => {
               justifyContent: "space-between",
               flexDirection: "row",
               width: "100%",
+              alignItems: "center",
             }}
           >
-            <div style={{ fontWeight: "bold", fontSize: 60 }}>Все задачи</div>
-            <div style={{ display: "flex", flexDirection: "row", height: "100%", gap:20 }}>
-              <Button
-                indentation={12}
-                text="Автоматическое распределение задач"
-                icon={
-                  <CheckSquareOutlined />
-                }
-                onClick={handleAutoDistribute}
-              />
+            <div className={styles.title}>Все задачи</div>
+            <div style={{display: "flex", flexDirection: "row", height: "100%", gap: 20}}>
+              <button
+                  className={styles.customButton}
+                  onClick={handleAutoDistribute}
+              >
+                <img src={autoTaskDistribution}/>
+                Автоматическое распределение задач
+              </button>
 
-              <Button
-                text="Создать задачу"
-                icon={<PlusCircleOutlined />}
-                onClick={handleCreateTask} indentation={12}              />
+              <AddTaskButton/>
             </div>
           </div>
 
@@ -113,7 +106,7 @@ const TasksPage: React.FC = () => {
                 id={task.id}
                 name={task.name}
                 project={task.project}
-                typeIcon={task.typeIcon}
+                type={task.type}
                 priorityColor={task.priorityColor}
                 deadline={task.deadline}
                 executor={task.executor}

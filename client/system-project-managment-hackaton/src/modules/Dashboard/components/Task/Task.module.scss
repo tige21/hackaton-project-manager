@@ -171,24 +171,24 @@ $focused-outline-color: #4c9ffe;
     display: flex;
     align-items: center;
     gap: 12px;
-
-    .TaskTypeContainer {
-      display: flex;
-      align-items: center;
-
-      .TaskTypeImg {
-        width: 20px;
-        height: 20px;
-      }
-    }
-
-    .TaskPriority {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      border: 1px solid #B1B1B1
-    }
   }
+}
+
+.TaskTypeContainer {
+  display: flex;
+  align-items: center;
+
+  .TaskTypeImg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.TaskPriority {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid #B1B1B1
 }
 
 .Actions {

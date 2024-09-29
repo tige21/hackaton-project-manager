@@ -30,9 +30,8 @@ import { DroppableContainer } from "../DroppableContainer/DroppableContainer.tsx
 import { SortableTask } from "../SortableTask/SortableTask.tsx";
 import { Task } from "../Task/Task.tsx";
 import TaskDetails from "../../../Tasks/components/TaskDetail/TaskDetail.tsx";
-import PeopleModal from "../PeopleModal/PeopleModal.tsx";
-import {useGetTasksQuery} from "../../api.ts";
 import {ITask} from "../../type";
+import {useGetTasksQuery} from "../../api.ts";
 
 const dropAnimation: DropAnimation = {
   sideEffects: defaultDropAnimationSideEffects({
@@ -159,7 +158,7 @@ export function Dashboard({
   const recentlyMovedToNewContainer = useRef(false);
   const isSortingContainer = activeId ? containers.includes(activeId) : false;
 
-  // const { data, error } = useGetTasksQuery();
+  const { data, error } = useGetTasksQuery();
   fetch("http://localhost:8081/api/tasks")
   const collisionDetectionStrategy: CollisionDetection = useCallback(
     (args) => {

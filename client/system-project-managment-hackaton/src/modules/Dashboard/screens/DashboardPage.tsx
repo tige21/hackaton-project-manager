@@ -5,12 +5,12 @@ import styles from "./DashboardPage.module.scss";
 import PeopleModal from "../components/PeopleModal/PeopleModal";
 import {ITask} from "../type";
 import peoples from "../../../assets/peoples.svg"
-import addTask from "../../../assets/addTask.svg"
+import {AddTaskButton} from "../../../components/AddTaskButton/AddTaskButton.tsx";
 
 const DashboardPage: React.FC = () => {
-    const [isPeopleModalVisible, setIsPeopleModalVisible] = useState(false);
-
+    const [isPeopleModalOpen, setIsPeopleModalOpen] = useState(false);
     const [selectedTask, setSelectedTask] = useState<ITask | null>(null);
+
     const handleTaskClick = (task: ITask) => {
         setSelectedTask(task);
     };
@@ -19,8 +19,8 @@ const DashboardPage: React.FC = () => {
         setSelectedTask(null);
     };
 
-    const toggleShowModal = () => {
-        setIsPeopleModalVisible(!isPeopleModalVisible);
+    const toggleShowPeopleModal = () => {
+        setIsPeopleModalOpen(!isPeopleModalOpen);
     }
 
     return (
@@ -45,14 +45,11 @@ const DashboardPage: React.FC = () => {
                 >
                     <h1 className={styles.dashboardTitle}>IT INNO HACK</h1>
                     <div className={styles.buttonsContainer}>
-                        <button onClick={toggleShowModal} className={styles.customButton}>
+                        <button onClick={toggleShowPeopleModal} className={styles.customButton}>
                             <img className={styles.peoplesImg} src={peoples}/>
                             Люди
                         </button>
-                        <button className={styles.customButton}>
-                            <img className={styles.peoplesImg} src={addTask}/>
-                            Создать задачу
-                        </button>
+                        <AddTaskButton/>
                     </div>
                 </div>
 
@@ -62,7 +59,7 @@ const DashboardPage: React.FC = () => {
                     onClose={handleCloseTaskDetails}
                 />
             </div>
-            {isPeopleModalVisible && <PeopleModal onClose={toggleShowModal}/>}
+            <PeopleModal open={isPeopleModalOpen} onClose={toggleShowPeopleModal}/>
         </div>
     );
 };

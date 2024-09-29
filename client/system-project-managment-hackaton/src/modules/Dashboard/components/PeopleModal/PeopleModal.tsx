@@ -4,7 +4,7 @@ import styles from './PeopleModal.module.scss';
 
 const { Option } = Select;
 
-const PeopleModal = ({ onClose }: { onClose: () => void }) => {
+const PeopleModal = ({ open, onClose }: { open: boolean, onClose: () => void }) => {
     const users = [
     { key: '1', firstName: 'Иванов', lastName: 'Иван', email: 'ivanov@yandex.ru', role: 'Роль' },
     { key: '2', firstName: 'Иванов', lastName: 'Иван', email: 'ivanov@yandex.ru', role: 'Администратор' },
@@ -33,7 +33,7 @@ const PeopleModal = ({ onClose }: { onClose: () => void }) => {
   ];
 
   return (
-    <Modal title="IT INNO HACK"  onCancel={onClose} footer={null} width={800}>
+    <Modal title="IT INNO HACK"  onCancel={onClose} footer={null} width={800} open={open}>
       <div className={styles.addUser}>
         <Input prefix={<SearchOutlined />} placeholder="Введите почту" className={styles.input} />
         <Button type="primary" className={styles.addButton}>Добавить участника</Button>
