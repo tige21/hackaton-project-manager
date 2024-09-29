@@ -72,13 +72,13 @@ public class TaskServiceImpl implements TaskService {
         TaskStatusResponseDto response = new TaskStatusResponseDto();
 
         tasks.forEach(task -> {
-            TaskDto taskDto = taskMapper.toDto(task);
+            Long taskId = task.getId();
             switch (task.getStatus()) {
-                case OPEN -> response.getBacklog().add(taskDto);
-                case IN_PROGRESS -> response.getInProgress().add(taskDto);
-                case REVIEW -> response.getReview().add(taskDto);
-                case TESTING -> response.getTesting().add(taskDto);
-                case READY -> response.getReady().add(taskDto);
+                case OPEN -> response.getBacklog().add(taskId);
+                case IN_PROGRESS -> response.getInProgress().add(taskId);
+                case REVIEW -> response.getReview().add(taskId);
+                case TESTING -> response.getTesting().add(taskId);
+                case READY -> response.getReady().add(taskId);
             }
         });
 
