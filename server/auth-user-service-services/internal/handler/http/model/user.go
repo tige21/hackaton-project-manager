@@ -19,17 +19,23 @@ type SignUpResponse struct {
 	JWT JWT `json:"jwt"`
 }
 
-// UserUpdate - модель при редактировании пользователя
-type UserUpdate struct {
+// UserUpdateBase - базовая модель для редактирования пользователя
+type UserUpdateBase struct {
 	ID      string  `json:"id"`
 	Name    *string `json:"name"`
 	Surname *string `json:"surname"`
 	Email   *string `json:"email"`
 }
 
+// UserUpdate - модель при редактировании пользователя
+type UserUpdate struct {
+	UserUpdateBase
+	Password *string `json:"password"`
+}
+
 // UserUpdatePrivate - модель при приватного редактировании пользователя
 type UserUpdatePrivate struct {
-	UserUpdate
+	UserUpdateBase
 	Role *string `json:"role"`
 }
 

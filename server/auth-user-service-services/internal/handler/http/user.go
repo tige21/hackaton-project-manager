@@ -127,6 +127,10 @@ func (h *Handler) UpdateUserByID(w http.ResponseWriter, r *http.Request) error {
 
 	user := mapper.MapToEntityUserUpdate(userUpdate)
 	user.ID = selfUserID
+	if userUpdate.Password != nil {
+		passwordHash := helpers.GeneratePasswordHash(*userUpdate.Password)
+		user.Password = &passwordHash
+	}
 
 	result, err := h.userService.UpdateUserByID(ctx, user)
 	if err != nil {

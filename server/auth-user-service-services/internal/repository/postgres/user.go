@@ -174,6 +174,12 @@ func prepareQueryUpdate(user entity.UserUpdate) (string, []interface{}) {
 		argId++
 	}
 
+	if user.Password != nil {
+		setValues = append(setValues, fmt.Sprintf("password=$%d", argId))
+		args = append(args, *user.Password)
+		argId++
+	}
+
 	setValues = append(setValues, fmt.Sprintf("updated_date=$%d", argId))
 	args = append(args, time.Now().UTC())
 	argId++

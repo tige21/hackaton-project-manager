@@ -42,6 +42,11 @@ func ValidateUserUpdate(user model.UserUpdate) error {
 	if user.Surname != nil && strings.TrimSpace(*user.Surname) == "" {
 		return apperror.ErrEmptySurname
 	}
+
+	if user.Password != nil && strings.TrimSpace(*user.Password) == "" {
+		return apperror.ErrEmptyPassword
+	}
+
 	if user.Email != nil {
 		if strings.TrimSpace(*user.Email) == "" {
 			return apperror.ErrEmptyEmail
@@ -88,7 +93,6 @@ func ValidateUserUpdatePrivate(user model.UserUpdatePrivate) error {
 
 	return nil
 
-	return nil
 }
 
 // ValidateSignInUser - валидация пользователя при авторизации
